@@ -2,6 +2,33 @@
 @section('title', 'Create Plan')
 @section('page-title', 'Create Plan')
 
+@push('styles')
+<style>
+    /* CKEditor Dark Theme Overrides */
+    .ck-editor__notifier, .ck-editor__notifier__item { background: var(--navy-2) !important; color: var(--text) !important; border-color: var(--border) !important; }
+    .ck-reset_all :not(.ck-reset_all-excluded) { color: var(--text) !important; }
+    .ck.ck-editor__main>.ck-editor__editable { background: rgba(255,255,255,.03) !important; border-color: var(--border) !important; color: var(--text) !important; min-height: 200px; }
+    .ck.ck-editor__main>.ck-editor__editable.ck-focused { border-color: var(--gold) !important; box-shadow: 0 0 0 3px var(--gold-glow) !important; }
+    .ck.ck-toolbar { background: var(--navy-3) !important; border-color: var(--border) !important; }
+    .ck.ck-button { color: var(--text) !important; cursor: pointer; }
+    .ck.ck-button:hover { background: var(--navy-4) !important; }
+    .ck.ck-button.ck-on { background: var(--navy-2) !important; color: var(--gold) !important; }
+    .ck.ck-toolbar__separator { background: var(--border) !important; }
+    .ck.ck-dropdown__panel { background: var(--navy-2) !important; border-color: var(--border) !important; }
+
+    /* Emoji Picker Styles */
+    .emoji-section { margin-bottom: 20px; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .emoji-section-title { font-size: .75rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .emoji-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .emoji-btn { 
+        width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; 
+        background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 8px; 
+        cursor: pointer; font-size: 1.2rem; transition: all .2s;
+    }
+    .emoji-btn:hover { background: var(--gold-glow); border-color: var(--gold); transform: scale(1.1); }
+</style>
+@endpush
+
 @section('content')
 <div class="page-header">
     <div>
@@ -11,7 +38,7 @@
     <a href="{{ route('admin.plans.index') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
 </div>
 
-<div style="max-width:680px">
+<div style="max-width:800px"> {{-- Widened for CKEditor --}}
     <div class="card">
         <div class="card-header"><div class="card-title"><i class="fas fa-layer-group" style="margin-right:8px;color:var(--gold)"></i>Plan Details</div></div>
         <div class="card-body">
@@ -26,7 +53,21 @@
 
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea name="description" class="form-control" placeholder="Describe what this plan includes...">{{ old('description') }}</textarea>
+                    
+                    {{-- Emoji Picker Section --}}
+                    <div class="emoji-section">
+                        <div class="emoji-section-title"><i class="far fa-smile"></i> Quick Emojis</div>
+                        <div class="emoji-grid">
+                            @php
+                                $emojis = ['✨', '🚀', '⭐', '✅', '🔥', '💎', '🎁', '💡', '⚡', '📊', '🛡️', '🌍', '📱', '💻', '💰', '🎯', '📢', '🤝', '🕒', '♾️'];
+                            @endphp
+                            @foreach($emojis as $emoji)
+                                <button type="button" class="emoji-btn" onclick="insertEmoji('{{ $emoji }}')">{{ $emoji }}</button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
                     @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
 
@@ -79,7 +120,33 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 <script>
+    let editorInstance;
+
+    // Initialize CKEditor
+    ClassicEditor
+        .create(document.querySelector('#description'), {
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'undo', 'redo'],
+        })
+        .then(editor => {
+            editorInstance = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    // Function to insert emoji into CKEditor
+    function insertEmoji(emoji) {
+        if (editorInstance) {
+            editorInstance.model.change(writer => {
+                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                writer.insertText(emoji, insertPosition);
+            });
+            editorInstance.editing.view.focus();
+        }
+    }
+
     const ap = document.getElementById('actualPrice');
     const dp = document.getElementById('discountPrice');
     const preview = document.getElementById('discountPreview');

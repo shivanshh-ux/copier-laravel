@@ -37,7 +37,7 @@
             position: fixed; top: 0; left: 0;
             width: var(--sidebar-w); height: 100vh;
             background: linear-gradient(180deg, var(--navy-2) 0%, var(--navy-4) 100%);
-            border-right: 1px solid var(--border);
+            border-right: none;
             display: flex; flex-direction: column;
             z-index: 100;
             backdrop-filter: blur(20px);

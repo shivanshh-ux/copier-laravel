@@ -1,4 +1,4 @@
-@extends('customer.layouts.app')
+extends('customer.layouts.app')
 
 @push('styles')
 <style>
