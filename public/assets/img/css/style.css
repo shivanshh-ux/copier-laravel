@@ -1,0 +1,90 @@
+/* ── Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-primary: 'Inter', sans-serif;
+  --font-display: 'Rajdhani', sans-serif;
+  --font-mono: 'Space Grotesk', sans-serif;
+  
+  /* ── Copier Brand Colors ── */
+  --brand-primary: #0A1628;
+  --brand-primary-light: #152540;
+  --brand-secondary: #1E5FAD;
+  --brand-secondary-light: #2D7DD2;
+  --brand-accent: #00D4FF;
+  --brand-accent-dark: #00A8CC;
+  --brand-gold: #F59E0B;
+  --brand-green: #10B981;
+  --brand-dark: #060D1A;
+  --brand-surface: #0F1E35;
+  --brand-surface-2: #162844;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--brand-dark);
+  color: #fff;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-custom {
+  font-family: var(--font-mono);
+}
+
+/* ── Global Styles ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Swiper pagination dots */
+.swiper-pagination-bullet {
+  background: rgba(226, 232, 240, 0.3) !important;
+  opacity: 1 !important;
+  width: 6px !important;
+  height: 6px !important;
+  transition: all 0.3s ease !important;
+}
+.swiper-pagination-bullet-active {
+  background: #00D4FF !important;
+  width: 18px !important;
+  border-radius: 3px !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #060D1A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E5FAD;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00D4FF;
+}
+
+/* Typed cursor */
+.typed-cursor {
+  color: #00D4FF;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* AOS override */
+[data-aos] {
+  pointer-events: auto !important;
+}
+
+/* Additional Utilities */
+.bg-brand-dark { background-color: var(--brand-dark); }
+.text-brand-accent { color: var(--brand-accent); }
+.border-brand-accent { border-color: var(--brand-accent); }
