@@ -8,7 +8,10 @@
         <h1>Plans</h1>
         <div class="breadcrumb">Admin / <span>Plans</span></div>
     </div>
-    <a href="{{ route('admin.plans.create') }}" class="btn btn-gold"><i class="fas fa-plus"></i> New Plan</a>
+    <div style="display:flex;gap:12px;align-items:center">
+        <button id="bulkDeleteBtn" class="btn btn-danger" style="display:none"><i class="fas fa-trash-alt"></i> Delete Selected (<span id="selectedCount">0</span>)</button>
+        <a href="{{ route('admin.plans.create') }}" class="btn btn-gold"><i class="fas fa-plus"></i> New Plan</a>
+    </div>
 </div>
 
 @if($plans->isEmpty())
@@ -17,14 +20,17 @@
 <div class="grid-3">
     @foreach($plans as $plan)
     <div class="card" style="position:relative">
+        <div style="position:absolute;top:14px;left:14px;z-index:2">
+            <input type="checkbox" class="row-checkbox" value="{{ $plan->id }}" style="width:18px;height:18px;cursor:pointer">
+        </div>
         @if(!$plan->is_active)
             <div style="position:absolute;top:14px;right:14px"><span class="badge badge-danger">Inactive</span></div>
         @else
             <div style="position:absolute;top:14px;right:14px"><span class="badge badge-success">Active</span></div>
         @endif
-        <div class="card-body">
+        <div class="card-body" style="padding-top:40px">
             <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">{{ $plan->name }}</div>
-            <div class="text-muted" style="font-size:.82rem;margin-bottom:16px;line-height:1.5">{{ Str::limit($plan->description, 80) }}</div>
+            <div class="text-muted" style="font-size:.82rem;margin-bottom:16px;line-height:1.5">{{ Str::limit(strip_tags($plan->description), 80) }}</div>
 
             <div style="margin-bottom:12px">
                 @if($plan->discounted_price)
@@ -44,11 +50,11 @@
                 <span class="text-muted" style="font-size:.78rem;margin-left:auto"><i class="fas fa-shopping-bag"></i> {{ $plan->orders_count }} orders</span>
             </div>
 
-            <div style="display:flex;gap:8px;margin-top:14px">
+            <div class="card-actions" style="display:flex;gap:8px">
                 <a href="{{ route('admin.plans.edit', $plan) }}" class="btn btn-gold btn-sm" style="flex:1;justify-content:center"><i class="fas fa-edit"></i> Edit</a>
-                <form method="POST" action="{{ route('admin.plans.destroy', $plan) }}" onsubmit="return confirm('Delete this plan?')">
+                <form method="POST" action="{{ route('admin.plans.destroy', $plan) }}">
                     @csrf @method('DELETE')
-                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm confirm-delete" data-confirm="You are about to delete the plan: {{ $plan->name }}"><i class="fas fa-trash"></i></button>
                 </form>
             </div>
         </div>
@@ -57,3 +63,55 @@
 </div>
 @endif
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.row-checkbox');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const selectedCount = document.getElementById('selectedCount');
+
+    function updateBulkButton() {
+        const checked = document.querySelectorAll('.row-checkbox:checked');
+        bulkDeleteBtn.style.display = checked.length > 0 ? 'inline-flex' : 'none';
+        selectedCount.textContent = checked.length;
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateBulkButton));
+
+    bulkDeleteBtn.addEventListener('click', function() {
+        const checked = document.querySelectorAll('.row-checkbox:checked');
+        const ids = Array.from(checked).map(cb => cb.value);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete ${ids.length} plans. This action cannot be undone!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: 'rgba(255,255,255,0.1)',
+            confirmButtonText: 'Yes, delete them!',
+            background: '#0d1526',
+            color: '#e2e8f0'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch("{{ route('admin.plans.bulk-delete') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ ids: ids })
+                }).then(res => res.json()).then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        Toast.fire({ icon: 'error', title: 'Something went wrong!' });
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+@endpush

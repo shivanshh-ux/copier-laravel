@@ -49,4 +49,18 @@ class MediaController extends Controller
         $medium->delete();
         return redirect()->route('admin.media.index')->with('success', 'File deleted.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+        if (!empty($ids)) {
+            $media = MediaUpload::whereIn('id', $ids)->get();
+            foreach ($media as $item) {
+                Storage::disk('public')->delete($item->file_path);
+                $item->delete();
+            }
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
+    }
 }

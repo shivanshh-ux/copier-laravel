@@ -4,8 +4,11 @@ $navLinks = [
     ['label' => 'About',    'route' => 'about'],
     ['label' => 'Services', 'route' => 'services'],
     ['label' => 'Help',     'route' => 'help'],
-    ['label' => 'Login',    'route' => 'login'],
 ];
+
+if (!Auth::guard('customer')->check()) {
+    $navLinks[] = ['label' => 'Login', 'route' => 'login'];
+}
 @endphp
 
 <!-- Scroll Progress Bar -->
@@ -42,9 +45,12 @@ $navLinks = [
                         <span class="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="background: rgba(0,212,255,0.07)"></span>
                     </a>
                 @endforeach
+                
+                @if (Auth::guard('customer')->check())
                 <a href="{{ route('profile') }}" class="ml-4 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 flex-shrink-0" style="background: linear-gradient(135deg, #1E5FAD, #00D4FF); color: #fff; box-shadow: 0 0 20px rgba(0,212,255,0.25);" title="Your Profile">
                     <i data-lucide="user" style="width:18px; height:18px; stroke-width: 2.5;"></i>
                 </a>
+                @endif
             </nav>
 
             <!-- Right side: hamburger (mobile) -->
@@ -75,6 +81,12 @@ $navLinks = [
                     {{ $link['label'] }}
                 </a>
             @endforeach
+            
+            @if (Auth::guard('customer')->check())
+            <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300" style="background: {{ request()->routeIs('profile') ? 'rgba(0,212,255,0.1)' : 'transparent' }}; color: {{ request()->routeIs('profile') ? '#00D4FF' : 'rgba(226,232,240,0.85)' }}; border-left: {{ request()->routeIs('profile') ? '3px solid #00D4FF' : '3px solid transparent' }}; font-weight: {{ request()->routeIs('profile') ? '600' : '400' }}; text-decoration: none; font-size: 0.95rem; letter-spacing: 0.02em;">
+                Profile
+            </a>
+            @endif
         </nav>
         <div class="mt-auto pt-8" style="border-top: 1px solid rgba(0,212,255,0.1)">
             <p class="text-center text-xs mt-4 opacity-40" style="color: #E2E8F0;">© 2026 Copier. All rights reserved.</p>

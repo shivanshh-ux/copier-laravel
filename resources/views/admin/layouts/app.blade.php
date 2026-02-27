@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator_modern.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -161,6 +165,7 @@
             backdrop-filter: blur(20px);
             overflow: hidden;
         }
+        .card:has(.card-actions) { display: flex; flex-direction: column; }
         .card-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border);
@@ -168,6 +173,8 @@
         }
         .card-title { font-size: 1rem; font-weight: 600; }
         .card-body { padding: 24px; }
+        .card:has(.card-actions) .card-body { flex: 1; display: flex; flex-direction: column; }
+        .card-actions { margin-top: auto; padding-top: 16px; }
 
         /* ── STAT CARDS ────────────────────────────────────── */
         .stat-card {
@@ -222,10 +229,11 @@
         /* ── BUTTONS ───────────────────────────────────────── */
         .btn {
             display: inline-flex; align-items: center; gap: 7px;
-            padding: 9px 18px; border-radius: 9px;
+            padding: 0 18px; border-radius: 9px;
             font-size: .855rem; font-weight: 600;
             cursor: pointer; border: none; transition: all .2s;
             text-decoration: none; white-space: nowrap;
+            height: 38px; justify-content: center;
         }
         .btn-gold {
             background: linear-gradient(135deg, var(--gold), var(--gold-2));
@@ -239,7 +247,9 @@
         .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
         .btn-danger { background: rgba(239,68,68,.15); color: #ef4444; border: 1px solid rgba(239,68,68,.3); }
         .btn-danger:hover { background: rgba(239,68,68,.25); }
-        .btn-sm { padding: 6px 12px; font-size: .8rem; border-radius: 7px; }
+        .btn-sm { padding: 0 12px; font-size: .8rem; border-radius: 7px; height: 34px; }
+        form { width: 100%; }
+        .card-actions form { display: inline-flex; width: auto; }
 
         /* ── FORMS ─────────────────────────────────────────── */
         .form-group { margin-bottom: 20px; }
@@ -348,6 +358,11 @@
             <span class="nav-icon"><i class="fas fa-photo-film"></i></span>
             Video & PDF
         </a>
+
+        <a href="{{ route('admin.reviews.index') }}" class="nav-item nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+            <span class="nav-icon"><i class="fas fa-comment-dots"></i></span>
+            Reviews
+        </a>
     </nav>
 
     <div class="sidebar-footer">
@@ -377,17 +392,19 @@
     </header>
 
     <main class="page-content">
-        @if(session('success'))
-            <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
-        @endif
-        @if(session('error'))
-            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ session('error') }}</div>
-        @endif
-
-        @if($errors->any())
-            @foreach($errors->all() as $error)
-                <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> {{ $error }}</div>
-            @endforeach
+        {{-- Standard Alerts (Hidden, handled by SweetAlert2) --}}
+        @if(false)
+            @if(session('success'))
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ session('error') }}</div>
+            @endif
+            @if($errors->any())
+                @foreach($errors->all() as $error)
+                    <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> {{ $error }}</div>
+                @endforeach
+            @endif
         @endif
 
         @yield('content')
@@ -404,13 +421,56 @@
     }
     updateClock(); setInterval(updateClock, 1000);
 
-    // Auto-dismiss alerts
-    setTimeout(() => {
-        document.querySelectorAll('.alert').forEach(el => {
-            el.style.transition = 'opacity .5s'; el.style.opacity = '0';
-            setTimeout(() => el.remove(), 500);
-        });
-    }, 4000);
+    // SweetAlert2 Toast Config (Exposed Globally)
+    window.Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    console.log("SweetAlert2 initialized and global Toast object ready.");
+
+    // Handle Laravel Flash Messages
+    @if(session('success'))
+        Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
+    @endif
+    @if(session('error'))
+        Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
+    @endif
+    @if($errors->any())
+        Toast.fire({ icon: 'error', title: "{{ $errors->first() }}" });
+    @endif
+
+    // Global Delete Confirmation
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.confirm-delete')) {
+            e.preventDefault();
+            const form = e.target.closest('form');
+            const message = e.target.closest('.confirm-delete').dataset.confirm || 'Are you sure you want to delete this?';
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: 'rgba(255,255,255,0.1)',
+                confirmButtonText: 'Yes, delete it!',
+                background: '#0d1526',
+                color: '#e2e8f0'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    });
 </script>
 @stack('scripts')
 </body>

@@ -13,16 +13,44 @@ class CustomerController extends Controller
     {
         $query = Customer::with('plan');
 
-        if ($request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%');
+        // Handle both direct and Tabulator filter formats
+        $search = $request->search;
+        $status = $request->status;
+
+        if ($request->has('filters')) {
+            foreach ($request->filters as $filter) {
+                if ($filter['field'] === 'search') $search = $filter['value'];
+                if ($filter['field'] === 'status') $status = $filter['value'];
+            }
         }
-        if ($request->status) {
-            $query->where('status', $request->status);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($request->ajax() || $request->wantsJson() || $request->query('json')) {
+            $customers = $query->latest()->paginate($request->size ?? 15);
+            return response()->json($customers);
         }
 
         $customers = $query->latest()->paginate(15);
         return view('admin.customers.index', compact('customers'));
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+        if (!empty($ids)) {
+            Customer::whereIn('id', $ids)->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
     }
 
     public function create()

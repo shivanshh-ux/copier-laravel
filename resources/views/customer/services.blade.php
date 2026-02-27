@@ -1,4 +1,4 @@
-extends('customer.layouts.app')
+@extends('customer.layouts.app')
 
 @push('styles')
 <style>
@@ -176,96 +176,53 @@ extends('customer.layouts.app')
 
         <div class="max-w-7xl mx-auto relative">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
-
+                @foreach($plans as $index => $plan)
                 @php
-                $packages=[
-                    [
-                        'name'=>'Starter','price'=>'$49','period'=>'/month',
-                        'badge'=>null,'featured'=>false,'enterprise'=>false,
-                        'color'=>'#1E5FAD','btnClass'=>'btn-outline',
-                        'desc'=>'Perfect for beginners discovering algorithmic trading.',
-                        'features'=>[
-                            ['txt'=>'1 Trading Account','yes'=>true],
-                            ['txt'=>'Up to 3 Copy Strategies','yes'=>true],
-                            ['txt'=>'Basic Analytics Dashboard','yes'=>true],
-                            ['txt'=>'Email Support','yes'=>true],
-                            ['txt'=>'MT4 / MT5 Integration','yes'=>true],
-                            ['txt'=>'Risk Score Alerts','yes'=>true],
-                            ['txt'=>'5 Trades/Minute','yes'=>true],
-                            ['txt'=>'AI Strategy Builder','yes'=>false],
-                            ['txt'=>'Priority Execution','yes'=>false],
-                            ['txt'=>'API Access','yes'=>false],
-                        ],
-                        'dir'=>'from-left','delay'=>'reveal-d1',
-                    ],
-                    [
-                        'name'=>'Professional','price'=>'$149','period'=>'/month',
-                        'badge'=>'Most Popular','featured'=>true,'enterprise'=>false,
-                        'color'=>'#00D4FF','btnClass'=>'btn-primary',
-                        'desc'=>'Designed for active traders who demand performance.',
-                        'features'=>[
-                            ['txt'=>'5 Trading Accounts','yes'=>true],
-                            ['txt'=>'Unlimited Copy Strategies','yes'=>true],
-                            ['txt'=>'Advanced Analytics & Reports','yes'=>true],
-                            ['txt'=>'24/7 Priority Support','yes'=>true],
-                            ['txt'=>'MT4 / MT5 Integration','yes'=>true],
-                            ['txt'=>'AI Strategy Builder','yes'=>true],
-                            ['txt'=>'50 Trades/Minute','yes'=>true],
-                            ['txt'=>'Full API Access','yes'=>true],
-                            ['txt'=>'Real-time Notifications','yes'=>true],
-                            ['txt'=>'Dedicated Account Manager','yes'=>false],
-                        ],
-                        'dir'=>'from-bottom','delay'=>'reveal-d2',
-                    ],
-                    [
-                        'name'=>'Enterprise','price'=>'$399','period'=>'/month',
-                        'badge'=>'Best Value','featured'=>false,'enterprise'=>true,
-                        'color'=>'#F59E0B','btnClass'=>'btn-primary btn-gold',
-                        'desc'=>'Full institutional-grade access for serious traders and funds.',
-                        'features'=>[
-                            ['txt'=>'Unlimited Trading Accounts','yes'=>true],
-                            ['txt'=>'Unlimited Copy Strategies','yes'=>true],
-                            ['txt'=>'Custom Strategy Development','yes'=>true],
-                            ['txt'=>'Dedicated Account Manager','yes'=>true],
-                            ['txt'=>'MT4 / MT5 Integration','yes'=>true],
-                            ['txt'=>'Full API Access','yes'=>true],
-                            ['txt'=>'Unlimited Trades/Minute','yes'=>true],
-                            ['txt'=>'White-label Option','yes'=>true],
-                            ['txt'=>'Backtesting Engine','yes'=>true],
-                            ['txt'=>'Priority Co-location','yes'=>true],
-                        ],
-                        'dir'=>'from-right','delay'=>'reveal-d3',
-                    ],
-                ];
+                    $isMiddle = count($plans) > 2 && $index === 1;
+                    $isLast = count($plans) > 2 && $index === 2;
+                    $cardClass = 'pricing-card reveal ' . ($index == 0 ? 'from-left' : ($index == count($plans)-1 ? 'from-right' : 'from-bottom')) . ' reveal-d' . ($index + 1);
+                    if($isMiddle) $cardClass .= ' featured';
+                    if($isLast) $cardClass .= ' enterprise';
+                    
+                    $color = $isMiddle ? '#00D4FF' : ($isLast ? '#F59E0B' : '#1E5FAD');
+                    $btnClass = $isMiddle ? 'btn-primary' : ($isLast ? 'btn-primary btn-gold' : 'btn-outline');
+                    
+                    // Features from description - strip legacy HTML tags if any
+                    $cleanDesc = str_replace(['<br>', '<br/>', '<br />'], "\n", $plan->description);
+                    $cleanDesc = strip_tags($cleanDesc);
+                    $features = array_filter(array_map('trim', explode("\n", $cleanDesc)));
                 @endphp
-
-                @foreach($packages as $pkg)
-                @php
-                    $cardClass='pricing-card reveal '.$pkg['dir'].' '.$pkg['delay'];
-                    if($pkg['featured']) $cardClass.=' featured';
-                    elseif($pkg['enterprise']) $cardClass.=' enterprise';
-                @endphp
+                
                 <div class="{{ $cardClass }}">
-                    @if($pkg['badge'])
-                    <div class="popular-badge absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold tracking-widest" style="background:{{ $pkg['featured']?'linear-gradient(135deg,#1E5FAD,#00D4FF)':'linear-gradient(135deg,#92400E,#F59E0B)' }};color:#fff;">
-                        {{ $pkg['featured']?'⭐ '.$pkg['badge']:'👑 '.$pkg['badge'] }}
+                    @if($isMiddle)
+                    <div class="popular-badge absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold tracking-widest" style="background:linear-gradient(135deg,#1E5FAD,#00D4FF);color:#fff;">
+                        ⭐ Most Popular
+                    </div>
+                    @elseif($isLast)
+                    <div class="popular-badge absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold tracking-widest" style="background:linear-gradient(135deg,#92400E,#F59E0B);color:#fff;">
+                        👑 Best Value
                     </div>
                     @endif
 
-                    <div class="p-7 sm:p-8" style="padding-top:{{ $pkg['badge']?'3.5rem':'2rem' }};">
+                    <div class="p-7 sm:p-8" style="padding-top:{{ ($isMiddle || $isLast) ? '3.5rem' : '2rem' }};">
                         <!-- Header -->
-                        <h3 class="font-bold mb-2" style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;color:#fff;">{{ $pkg['name'] }}</h3>
-                        <p class="text-xs mb-6" style="color:rgba(226,232,240,0.5);">{{ $pkg['desc'] }}</p>
+                        <h3 class="font-bold mb-2" style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;color:#fff;">{{ $plan->name }}</h3>
+                        <p class="text-xs mb-6" style="color:rgba(226,232,240,0.5);">{{ $plan->duration_days }} Days Protection</p>
 
                         <!-- Price -->
-                        <div class="flex items-end gap-1 mb-7">
-                            <span class="price-num" style="font-size:clamp(2.2rem,5vw,3.2rem);color:{{ $pkg['color'] }};">{{ $pkg['price'] }}</span>
-                            <span class="text-sm mb-2" style="color:rgba(226,232,240,0.4);">{{ $pkg['period'] }}</span>
+                        <div class="flex items-baseline gap-1 mb-7">
+                            <span class="price-num" style="font-size:clamp(2.2rem,5vw,3.2rem);color:{{ $color }};">
+                                ${{ $plan->discounted_price ?? $plan->actual_price }}
+                            </span>
+                            @if($plan->discounted_price)
+                            <span class="text-sm line-through opacity-30 ml-2" style="color:#fff;">${{ $plan->actual_price }}</span>
+                            @endif
+                            <span class="text-sm" style="color:rgba(226,232,240,0.4);">/month</span>
                         </div>
 
                         <!-- CTA -->
-                        <a href="{{ route('profile') }}" class="{{ $pkg['btnClass'] }} block w-full py-3 rounded-xl text-sm text-center font-semibold mb-7" style="{{ ($pkg['featured']||$pkg['enterprise'])?'':'background:rgba(255,255,255,0.05);color:#E2E8F0;border:1px solid rgba(0,212,255,0.25);' }}text-decoration:none;">
-                            <span>{{ $pkg['enterprise']?'Contact Sales':'Start Free Trial' }}</span>
+                        <a href="{{ route('signup', ['plan' => $plan->id]) }}" class="{{ $btnClass }} block w-full py-3 rounded-xl text-sm text-center font-semibold mb-7" style="{{ ($isMiddle||$isLast)?'':'background:rgba(255,255,255,0.05);color:#E2E8F0;border:1px solid rgba(0,212,255,0.25);' }}text-decoration:none;">
+                            <span>{{ $isLast ? 'Contact Sales' : 'Start Free Trial' }}</span>
                         </a>
 
                         <!-- Divider -->
@@ -273,20 +230,27 @@ extends('customer.layouts.app')
 
                         <!-- Features -->
                         <div>
-                            @foreach($pkg['features'] as $f)
-                            <div class="check-item {{ !$f['yes']?'crossed':'' }}">
-                                @if($f['yes'])
+                            @foreach($features as $feat)
+                            <div class="check-item">
                                 <i data-lucide="check-circle" class="icon-yes" style="width:15px;height:15px;"></i>
-                                @else
-                                <i data-lucide="circle" class="icon-no" style="width:15px;height:15px;"></i>
-                                @endif
-                                <span>{{ $f['txt'] }}</span>
+                                <span>{{ $feat }}</span>
                             </div>
                             @endforeach
+                            
+                            <!-- Dynamic Offers -->
+                            @if($plan->offers->count() > 0)
+                                @foreach($plan->offers as $offer)
+                                <div class="check-item" style="color: #00D4FF; font-weight: 600;">
+                                    <i data-lucide="zap" class="icon-yes" style="width:15px;height:15px; color: #00D4FF;"></i>
+                                    <span>{{ $offer->name }} (Included)</span>
+                                </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
                 @endforeach
+            </div>
             </div>
 
             <p class="text-center text-xs mt-8" style="color:rgba(226,232,240,0.3);">

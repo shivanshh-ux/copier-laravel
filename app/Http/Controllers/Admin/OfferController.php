@@ -82,4 +82,14 @@ class OfferController extends Controller
         $offer->delete();
         return redirect()->route('admin.offers.index')->with('success', 'Offer deleted.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+        if (!empty($ids)) {
+            Offer::whereIn('id', $ids)->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
+    }
 }

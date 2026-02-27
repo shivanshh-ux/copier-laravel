@@ -32,13 +32,13 @@
             <h2 class="text-2xl mb-2" style="font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff;">Welcome Back</h2>
             <p class="text-sm opacity-50 mb-8" style="color: #E2E8F0;">Enter your credentials to access your dashboard.</p>
 
-            <form action="#" method="POST" class="space-y-5" onsubmit="event.preventDefault(); window.location.href='{{ route('profile') }}';">
+            <form id="login-form" action="{{ route('login.post') }}" method="POST" class="space-y-5">
                 @csrf
                 <div>
                     <label class="block text-xs uppercase tracking-widest mb-2 opacity-60" style="color: #00D4FF; font-weight: 600;">Email Address</label>
                     <div class="relative">
                         <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" style="width:18px; height:18px; color: #E2E8F0;"></i>
-                        <input type="email" placeholder="name@company.com" required 
+                        <input type="email" name="email" placeholder="name@company.com" required 
                                class="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all focus:ring-1 focus:ring-[#00D4FF]/30" 
                                style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0;">
                     </div>
@@ -51,20 +51,23 @@
                     </div>
                     <div class="relative">
                         <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" style="width:18px; height:18px; color: #E2E8F0;"></i>
-                        <input type="password" placeholder="••••••••" required 
-                               class="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all focus:ring-1 focus:ring-[#00D4FF]/30" 
+                        <input type="password" name="password" id="password" placeholder="••••••••" required 
+                               class="w-full pl-12 pr-10 py-3.5 rounded-xl text-sm outline-none transition-all focus:ring-1 focus:ring-[#00D4FF]/30" 
                                style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0;">
+                        <button type="button" onclick="togglePassword('password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                            <i data-lucide="eye" style="width:16px; height:16px;"></i>
+                        </button>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2 mb-2">
-                    <input type="checkbox" id="remember" class="w-4 h-4 rounded border-none bg-black/40 text-[#00D4FF] focus:ring-0">
+                    <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded border-none bg-black/40 text-[#00D4FF] focus:ring-0">
                     <label for="remember" class="text-xs opacity-60" style="color: #E2E8F0;">Remember me for 30 days</label>
                 </div>
 
-                <button type="submit" class="w-full py-4 rounded-xl text-sm flex items-center justify-center gap-2 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] hover:-translate-y-0.5" 
+                <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl text-sm flex items-center justify-center gap-2 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] hover:-translate-y-0.5" 
                         style="background: linear-gradient(135deg, #1E5FAD, #00D4FF); color: #fff; font-weight: 700; margin-top: 1.5rem;">
-                    Sign In to Dashboard
+                    <span class="btn-text">Sign In to Dashboard</span>
                     <i data-lucide="arrow-right" class="group-hover:translate-x-1 transition-transform duration-300" style="width:18px; height:18px;"></i>
                 </button>
             </form>
@@ -83,5 +86,74 @@
 @endsection
 
 @push('scripts')
+<script>
+function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+    } else {
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+    }
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const btn = document.getElementById('submit-btn');
+    const btnText = btn.querySelector('.btn-text');
+    const originalText = btnText.innerText;
+    
+    // Disable button
+    btn.disabled = true;
+    btnText.innerText = 'Signing In...';
+    
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+    })
+    .then(async response => {
+        const data = await response.json();
+        if (response.ok && data.success) {
+            Swal.fire({
+                title: 'Welcome Back!',
+                text: data.message,
+                icon: 'success',
+                background: '#0d1526',
+                color: '#fff',
+                confirmButtonColor: '#00D4FF',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = data.redirect;
+            });
+        } else {
+            throw new Error(data.message || 'Invalid credentials.');
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Login Failed',
+            text: error.message,
+            icon: 'error',
+            background: '#0d1526',
+            color: '#fff',
+            confirmButtonColor: '#1E5FAD'
+        });
+        btn.disabled = false;
+        btnText.innerText = originalText;
+    });
+});
+</script>
 @endpush
 

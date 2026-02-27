@@ -9,6 +9,8 @@
     <!-- Tailwind CSS 4 CDN -->
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <!-- Custom Theme Styles -->
     <link rel="stylesheet" type="text/tailwindcss" href="{{ asset('assets/css/index.css') }}">
 
@@ -18,6 +20,10 @@
 
     <!-- AOS (Animate On Scroll) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />

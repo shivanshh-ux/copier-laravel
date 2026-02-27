@@ -513,39 +513,47 @@
     <div class="orb" style="width:350px;height:350px;background:rgba(0,212,255,0.08);top:20%;left:10%;animation-delay:2s;"></div>
 
     <div class="max-w-7xl mx-auto relative">
-        <div class="text-center mb-14 reveal from-bottom">
-            <div class="section-tag">Testimonials</div>
-            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
-                Traders <span class="gradient-text">Love Copier</span>
-            </h2>
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-14 reveal from-bottom">
+            <div class="text-center sm:text-left mb-6 sm:mb-0">
+                <div class="section-tag">Testimonials</div>
+                <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+                    Traders <span class="gradient-text">Love Copier</span>
+                </h2>
+            </div>
+            <button onclick="openReviewModal()" class="btn-outline py-2.5 px-6 text-sm">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                <span>Write a Review</span>
+            </button>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            @foreach($reviews as $i => $t)
             @php
-            $testimonials=[
-                ['name'=>'Alex R.','role'=>'Quantitative Trader','quote'=>'Copier cut my execution latency by 90%. I used to miss entries — now my strategy runs flawlessly around the clock.','dir'=>'from-left','delay'=>'reveal-d1'],
-                ['name'=>'Sara M.','role'=>'Portfolio Manager','quote'=>'The risk controls are exactly what I needed. Drawdown limits and auto-pause features saved me during the last volatility spike.','dir'=>'from-bottom','delay'=>'reveal-d2'],
-                ['name'=>'James L.','role'=>'Retail Investor','quote'=>'I had zero coding experience. The strategy library got me live in under an hour. Highly recommend.','dir'=>'from-right','delay'=>'reveal-d3'],
-            ];
+                $delays = ['reveal-d1', 'reveal-d2', 'reveal-d3', 'reveal-d4', 'reveal-d5', 'reveal-d6'];
+                $dir = $i % 3 == 0 ? 'from-left' : ($i % 3 == 1 ? 'from-bottom' : 'from-right');
+                $delay = $delays[$i % 6];
             @endphp
-            @foreach($testimonials as $t)
-            <div class="card reveal {{ $t['dir'].' '.$t['delay'] }} rounded-2xl p-6 tilt-3d">
+            <div class="card reveal {{ $dir }} {{ $delay }} rounded-2xl p-6 tilt-3d">
                 <!-- Quote icon -->
                 <div style="font-size:3rem;line-height:1;color:rgba(0,212,255,0.15);font-family:serif;margin-bottom:0.5rem;">"</div>
                 <!-- Stars -->
                 <div class="flex gap-1 mb-4">
-                    @for($i=0;$i<5;$i++)
-                    <i data-lucide="star" style="width:13px;height:13px;color:#FBBF24;fill:#FBBF24;"></i>
+                    @for($s=0; $s<5; $s++)
+                    <i data-lucide="star" style="width:13px;height:13px;color:{{ $s < $t->rating ? '#FBBF24' : 'rgba(255,255,255,0.1)' }};fill:{{ $s < $t->rating ? '#FBBF24' : 'transparent' }};"></i>
                     @endfor
                 </div>
-                <p class="text-sm leading-relaxed mb-5" style="color:rgba(226,232,240,0.75);">{{ $t['quote'] }}</p>
+                <p class="text-sm leading-relaxed mb-5" style="color:rgba(226,232,240,0.75);">{{ $t->content }}</p>
                 <div class="flex items-center gap-3" style="border-top:1px solid rgba(0,212,255,0.1);padding-top:1rem;">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold" style="background:linear-gradient(135deg,#1E5FAD,#00D4FF);color:#fff;font-family:'Rajdhani',sans-serif;">
-                        {{ $t['name'][0] }}
+                    <div class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 text-sm font-bold" style="background:linear-gradient(135deg,#1E5FAD,#00D4FF);color:#fff;font-family:'Rajdhani',sans-serif;">
+                        @if($t->avatar)
+                            <img src="{{ asset($t->avatar) }}" style="width:100%;height:100%;object-fit:cover">
+                        @else
+                            {{ $t->name[0] }}
+                        @endif
                     </div>
                     <div>
-                        <p class="text-sm font-semibold" style="color:#E2E8F0;">{{ $t['name'] }}</p>
-                        <p class="text-xs" style="color:#00D4FF;opacity:0.7;">{{ $t['role'] }}</p>
+                        <p class="text-sm font-semibold" style="color:#E2E8F0;">{{ $t->name }}</p>
+                        <p class="text-xs" style="color:#00D4FF;opacity:0.7;">{{ $t->role }}</p>
                     </div>
                 </div>
             </div>
@@ -723,6 +731,63 @@
         </div>
     </div>
 </div>
+
+{{-- Review Submission Modal --}}
+<div id="review-modal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; padding:1.5rem;">
+    <div id="review-backdrop" style="position:absolute; inset:0; background:rgba(4, 9, 20, 0.85); backdrop-filter:blur(12px); opacity:0; transition:opacity 0.4s ease;" onclick="closeReviewModal()"></div>
+    <div id="review-content" style="position:relative; width:100%; max-width:550px; background:linear-gradient(135deg, rgba(30,95,173,0.15), rgba(0,212,255,0.05)); border:1px solid rgba(0,212,255,0.2); border-radius:2rem; padding:2.5rem; transform:translateY(30px) scale(0.95); opacity:0; transition:all 0.4s cubic-bezier(0.23,1,0.32,1); box-shadow:0 40px 100px rgba(0,0,0,0.5);">
+        <button class="close-modal" onclick="closeReviewModal()" style="position:absolute; top:1.5rem; right:1.5rem; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; cursor:pointer;">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        
+        <h2 style="font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; color:#fff; margin-bottom:0.5rem;">Share Your Experience</h2>
+        <p style="color:rgba(226,232,240,0.6); margin-bottom:2rem; font-size:0.9rem;">Your review will help other traders make the right choice.</p>
+
+        <form id="publicReviewForm" enctype="multipart/form-data" class="space-y-5">
+            @csrf
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Full Name</label>
+                    <input type="text" name="name" required placeholder="John Doe" 
+                           style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.75rem 1rem; color:#fff; outline:none; font-size:0.9rem;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Role / Title</label>
+                    <input type="text" name="role" placeholder="Professional Trader" 
+                           style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.75rem 1rem; color:#fff; outline:none; font-size:0.9rem;">
+                </div>
+            </div>
+
+            <div>
+                <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Rating</label>
+                <div class="flex gap-2" id="starRatingContainer">
+                    @for($i=1; $i<=5; $i++)
+                        <i data-lucide="star" class="star-picker cursor-pointer" data-rating="{{ $i }}" 
+                           style="width:24px; height:24px; color:rgba(255,255,255,0.2); fill:transparent; transition:all 0.2s ease;"></i>
+                    @endfor
+                </div>
+                <input type="hidden" name="rating" id="ratingInput" value="5">
+            </div>
+
+            <div>
+                <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Your Message</label>
+                <textarea name="content" required rows="4" placeholder="How has Copier helped your trading?" 
+                          style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.75rem 1rem; color:#fff; outline:none; font-size:0.9rem; resize:none;"></textarea>
+            </div>
+
+            <div>
+                <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Avatar (Optional)</label>
+                <input type="file" name="avatar" accept="image/*" 
+                       style="width:100%; font-size:0.8rem; color:rgba(226,232,240,0.5);">
+            </div>
+
+            <button type="submit" class="btn-primary w-full py-4 rounded-xl mt-4" id="submitReviewBtn">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Submit Review</span>
+            </button>
+        </form>
+    </div>
+</div>
 @endpush
 
 @push('scripts')
@@ -786,10 +851,125 @@
         document.body.style.overflow = '';
     };
 
+    /* ── REVIEW MODAL LOGIC ── */
+    const reviewModal = document.getElementById('review-modal');
+    const reviewContent = document.getElementById('review-content');
+    const reviewBackdrop = document.getElementById('review-backdrop');
+    const publicReviewForm = document.getElementById('publicReviewForm');
+    const starPickers = document.querySelectorAll('.star-picker');
+    const ratingInput = document.getElementById('ratingInput');
+
+    window.openReviewModal = function() {
+        reviewModal.style.display = 'flex';
+        // Force reflow
+        reviewModal.offsetHeight;
+        reviewBackdrop.style.opacity = '1';
+        reviewContent.style.opacity = '1';
+        reviewContent.style.transform = 'translateY(0) scale(1)';
+        document.body.style.overflow = 'hidden';
+        
+        // Reset form
+        publicReviewForm.reset();
+        setRating(5);
+    };
+
+    window.closeReviewModal = function() {
+        reviewBackdrop.style.opacity = '0';
+        reviewContent.style.opacity = '0';
+        reviewContent.style.transform = 'translateY(30px) scale(0.95)';
+        setTimeout(() => {
+            reviewModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 400);
+    };
+
+    function setRating(val) {
+        ratingInput.value = val;
+        // Select fresh elements as Lucide might have replaced <i> with <svg>
+        const currentStars = document.querySelectorAll('.star-picker');
+        currentStars.forEach(s => {
+            const r = parseInt(s.getAttribute('data-rating'));
+            if (r <= val) {
+                s.style.color = '#FBBF24';
+                s.style.fill = '#FBBF24';
+            } else {
+                s.style.color = 'rgba(255,255,255,0.2)';
+                s.style.fill = 'transparent';
+            }
+        });
+    }
+
+    // Use event delegation for reliability since Lucide replaces elements
+    const starContainer = document.getElementById('starRatingContainer');
+    starContainer.addEventListener('click', (e) => {
+        const star = e.target.closest('.star-picker');
+        if (star) {
+            setRating(parseInt(star.getAttribute('data-rating')));
+        }
+    });
+
+    publicReviewForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitReviewBtn');
+        const btnText = btn.querySelector('span');
+        const originalText = btnText.textContent;
+
+        btn.disabled = true;
+        btnText.textContent = 'Submitting...';
+
+        const formData = new FormData(this);
+
+        fetch("{{ route('reviews.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Thank You!',
+                    text: data.message,
+                    icon: 'success',
+                    background: '#0d1526',
+                    color: '#e2e8f0',
+                    confirmButtonColor: '#00D4FF'
+                });
+                closeReviewModal();
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message || 'Something went wrong.',
+                    icon: 'error',
+                    background: '#0d1526',
+                    color: '#e2e8f0',
+                    confirmButtonColor: '#ef4444'
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({
+                title: 'Error',
+                text: 'Could not submit review. Please try again.',
+                icon: 'error',
+                background: '#0d1526',
+                color: '#e2e8f0'
+            });
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btnText.textContent = originalText;
+        });
+    });
+
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeFeatureModal();
+        if (e.key === 'Escape') {
+            if (modal.classList.contains('active')) closeFeatureModal();
+            if (reviewModal.style.display === 'flex') closeReviewModal();
         }
     });
 
