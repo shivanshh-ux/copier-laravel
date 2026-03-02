@@ -31,28 +31,28 @@
 
                 <div class="form-group">
                     <label class="form-label">Target Plan (Optional)</label>
-                    <select name="plan_id" class="form-control">
-                        <option value="">— General Offer (No Specific Plan) —</option>
+                    <select name="plan_id" class="form-control" id="planSelector">
+                        <option value="" data-currency="INR">— General Offer (No Specific Plan) —</option>
                         @foreach($plans as $plan)
-                            <option value="{{ $plan->id }}" {{ old('plan_id', $offer->plan_id) == $plan->id ? 'selected' : '' }}>{{ $plan->name }}</option>
+                            <option value="{{ $plan->id }}" {{ old('plan_id', $offer->plan_id) == $plan->id ? 'selected' : '' }} data-currency="{{ $plan->currency }}">{{ $plan->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Actual Price (₹) *</label>
+                        <label class="form-label">Actual Price (<span class="currency-symbol">₹</span>) *</label>
                         <input type="number" name="actual_price" class="form-control" step="0.01" min="0" value="{{ old('actual_price', $offer->actual_price) }}" required id="actualPrice">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Offer Price (₹) *</label>
+                        <label class="form-label">Offer Price (<span class="currency-symbol">₹</span>) *</label>
                         <input type="number" name="discounted_price" class="form-control" step="0.01" min="0" value="{{ old('discounted_price', $offer->discounted_price) }}" required id="discountPrice">
                     </div>
                 </div>
 
                 <div id="discountPreview" style="{{ ($offer->actual_price > $offer->discounted_price) ? '' : 'display:none;' }}background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:.85rem">
                     <span class="text-muted">Savings: </span>
-                    <span id="savingsAmt" class="text-success fw-600">₹{{ number_format($offer->actual_price - $offer->discounted_price, 2) }}</span>
+                    <span id="savingsAmt" class="text-success fw-600"></span>
                     &nbsp;&nbsp;
                     <span class="text-muted">Discount: </span>
                     <span id="discountPct" class="badge badge-success">{{ $offer->discount_percent }}% OFF</span>
@@ -87,15 +87,42 @@
     const ap = document.getElementById('actualPrice');
     const dp = document.getElementById('discountPrice');
     const preview = document.getElementById('discountPreview');
+    const planSelector = document.getElementById('planSelector');
+    const currencySymbols = document.querySelectorAll('.currency-symbol');
+
+    const symbols = {
+        'INR': '₹',
+        'USD': '$',
+        'EUR': '€',
+        'GBP': '£'
+    };
+
+    function updateSymbols() {
+        const selectedOption = planSelector.options[planSelector.selectedIndex];
+        const currencyCode = selectedOption.getAttribute('data-currency') || 'INR';
+        const symbol = symbols[currencyCode] || '₹';
+        currencySymbols.forEach(el => el.textContent = symbol);
+        calcDiscount();
+    }
+
     function calcDiscount() {
         const a = parseFloat(ap.value), d = parseFloat(dp.value);
+        const selectedOption = planSelector.options[planSelector.selectedIndex];
+        const currencyCode = selectedOption.getAttribute('data-currency') || 'INR';
+        const symbol = symbols[currencyCode] || '₹';
+
         if (a > 0 && d > 0 && d < a) {
             preview.style.display = 'block';
-            document.getElementById('savingsAmt').textContent = '₹' + (a-d).toFixed(2);
+            document.getElementById('savingsAmt').textContent = symbol + (a-d).toFixed(2);
             document.getElementById('discountPct').textContent = Math.round(((a-d)/a)*100) + '% OFF';
         } else { preview.style.display = 'none'; }
     }
+
     ap.addEventListener('input', calcDiscount);
     dp.addEventListener('input', calcDiscount);
+    planSelector.addEventListener('change', updateSymbols);
+
+    // Initial check
+    updateSymbols();
 </script>
 @endpush

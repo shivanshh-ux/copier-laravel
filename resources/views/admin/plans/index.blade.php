@@ -30,17 +30,21 @@
         @endif
         <div class="card-body" style="padding-top:40px">
             <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">{{ $plan->name }}</div>
-            <div class="text-muted" style="font-size:.82rem;margin-bottom:16px;line-height:1.5">{{ Str::limit(strip_tags($plan->description), 80) }}</div>
+            <div class="text-muted" style="font-size:.82rem;margin-bottom:16px;line-height:1.5">{{ Str::limit(strip_tags(str_replace(['<', '>', '&nbsp;'], [' <', '> ', ' '], $plan->description)), 80) }}</div>
 
             <div style="margin-bottom:12px">
+                @php
+                    $symbols = ['INR' => '₹', 'USD' => '$', 'EUR' => '€', 'GBP' => '£'];
+                    $symbol = $symbols[$plan->currency] ?? '₹';
+                @endphp
                 @if($plan->discounted_price)
                     <div style="display:flex;align-items:baseline;gap:8px">
-                        <span style="font-size:1.6rem;font-weight:800;color:var(--gold)">₹{{ number_format($plan->discounted_price,2) }}</span>
-                        <del class="text-muted">₹{{ number_format($plan->actual_price,2) }}</del>
+                        <span style="font-size:1.6rem;font-weight:800;color:var(--gold)">{{ $symbol }}{{ number_format($plan->discounted_price,2) }}</span>
+                        <del class="text-muted">{{ $symbol }}{{ number_format($plan->actual_price,2) }}</del>
                         <span class="badge badge-success">{{ $plan->discount_percent }}% OFF</span>
                     </div>
                 @else
-                    <span style="font-size:1.6rem;font-weight:800;color:var(--gold)">₹{{ number_format($plan->actual_price,2) }}</span>
+                    <span style="font-size:1.6rem;font-weight:800;color:var(--gold)">{{ $symbol }}{{ number_format($plan->actual_price,2) }}</span>
                 @endif
                 <div class="text-muted" style="font-size:.78rem;margin-top:4px"><i class="fas fa-calendar-alt"></i> {{ $plan->duration_days }} days</div>
             </div>

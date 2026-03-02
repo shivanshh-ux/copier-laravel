@@ -18,7 +18,8 @@ use App\Http\Controllers\Customer\ProfileController;
 // ─── Customer Frontend Routes ─────────────────────────────────────────────────
 Route::get('/', function () { 
     $reviews = \App\Models\Review::where('is_active', true)->latest()->take(6)->get();
-    return view('customer.home', compact('reviews')); 
+    $media = \App\Models\MediaUpload::latest()->get();
+    return view('customer.home', compact('reviews', 'media')); 
 })->name('home');
 Route::get('/about', function () { return view('customer.about'); })->name('about');
 Route::get('/services', [ServiceController::class, 'index'])->name('services');

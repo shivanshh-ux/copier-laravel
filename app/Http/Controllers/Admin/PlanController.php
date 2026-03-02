@@ -26,21 +26,20 @@ class PlanController extends Controller
             'description'       => 'nullable|string',
             'actual_price'      => 'required|numeric|min:0',
             'discounted_price'  => 'nullable|numeric|min:0|lt:actual_price',
+            'currency'          => 'required|string|max:10',
             'duration_days'     => 'required|integer|min:1',
             'is_active'         => 'boolean',
         ]);
 
         $description = $request->description;
-        if ($description) {
-            $description = str_replace(['<br>', '<br/>', '<br />'], "\n", $description);
-            $description = strip_tags($description);
-        }
+
 
         Plan::create([
             'name'             => $request->name,
             'description'      => $description,
             'actual_price'     => $request->actual_price,
             'discounted_price' => $request->discounted_price,
+            'currency'         => $request->currency,
             'duration_days'    => $request->duration_days,
             'is_active'        => $request->boolean('is_active', true),
         ]);
@@ -60,21 +59,20 @@ class PlanController extends Controller
             'description'      => 'nullable|string',
             'actual_price'     => 'required|numeric|min:0',
             'discounted_price' => 'nullable|numeric|min:0',
+            'currency'         => 'required|string|max:10',
             'duration_days'    => 'required|integer|min:1',
             'is_active'        => 'boolean',
         ]);
 
         $description = $request->description;
-        if ($description) {
-            $description = str_replace(['<br>', '<br/>', '<br />'], "\n", $description);
-            $description = strip_tags($description);
-        }
+
 
         $plan->update([
             'name'             => $request->name,
             'description'      => $description,
             'actual_price'     => $request->actual_price,
             'discounted_price' => $request->discounted_price ?: null,
+            'currency'         => $request->currency,
             'duration_days'    => $request->duration_days,
             'is_active'        => $request->boolean('is_active'),
         ]);

@@ -10,7 +10,7 @@ class Plan extends Model
     use HasFactory;
     protected $fillable = [
         'name', 'description', 'actual_price',
-        'discounted_price', 'duration_days', 'is_active'
+        'discounted_price', 'currency', 'duration_days', 'is_active'
     ];
 
     public function customers()

@@ -472,6 +472,57 @@
     </div>
 </section>
 
+<!-- ===================== LEARNING RESOURCES (MEDIA) ===================== -->
+@if($media->count() > 0)
+<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-30 pointer-events-none"></div>
+    <div class="orb" style="width:400px;height:400px;background:rgba(0,212,255,0.06);top:20%;left:-100px;animation-delay:1s;"></div>
+    
+    <div class="max-w-7xl mx-auto relative">
+        <div class="text-center mb-16 reveal from-bottom">
+            <div class="section-tag">Resources</div>
+            <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+                Learning <span class="gradient-text">Center</span>
+            </h2>
+            <p class="mx-auto max-w-xl" style="font-size:0.95rem;color:rgba(226,232,240,0.55);">Access our exclusive guides and video tutorials to master the art of algorithmic trading.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            @foreach($media as $i => $item)
+            <div class="card reveal from-bottom reveal-d{{ ($i % 4) + 1 }} rounded-2xl p-6 tilt-3d flex flex-col">
+                <div class="flex items-start justify-between mb-6">
+                    <div class="feat-icon">
+                        <i data-lucide="{{ $item->type == 'video' ? 'play-circle' : 'file-text' }}" style="width:24px;height:24px;color:#00D4FF;"></i>
+                    </div>
+                    <span class="text-[0.65rem] font-bold tracking-widest uppercase px-3 py-1 rounded-full" style="background:rgba(0,212,255,0.1); color:#00D4FF; border:1px solid rgba(0,212,255,0.15);">
+                        {{ strtoupper($item->type) }}
+                    </span>
+                </div>
+
+                <h3 class="font-semibold mb-3" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;font-size:1.2rem;letter-spacing:0.02em;">{{ $item->title }}</h3>
+                <p class="text-sm leading-relaxed mb-8 flex-1" style="color:rgba(226,232,240,0.5);">{{ $item->description }}</p>
+
+                <div class="pt-6 border-t border-white/5">
+                    @if($item->type == 'video')
+                        <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="btn-primary w-full justify-center py-3 text-xs">
+                            <i data-lucide="play" style="width:14px;height:14px;"></i>
+                            <span>Watch Tutorial</span>
+                        </a>
+                    @else
+                        <a href="{{ asset('storage/' . $item->file_path) }}" download="{{ $item->original_name }}" class="btn-outline w-full justify-center py-3 text-xs">
+                            <i data-lucide="download" style="width:14px;height:14px;"></i>
+                            <span>Download Guide</span>
+                        </a>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+
 <!-- ===================== HOW IT WORKS ===================== -->
 <section class="relative px-4 sm:px-6 lg:px-8 py-20">
     <div class="max-w-5xl mx-auto">

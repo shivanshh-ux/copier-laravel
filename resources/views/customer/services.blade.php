@@ -187,10 +187,17 @@
                     $color = $isMiddle ? '#00D4FF' : ($isLast ? '#F59E0B' : '#1E5FAD');
                     $btnClass = $isMiddle ? 'btn-primary' : ($isLast ? 'btn-primary btn-gold' : 'btn-outline');
                     
-                    // Features from description - strip legacy HTML tags if any
-                    $cleanDesc = str_replace(['<br>', '<br/>', '<br />'], "\n", $plan->description);
-                    $cleanDesc = strip_tags($cleanDesc);
-                    $features = array_filter(array_map('trim', explode("\n", $cleanDesc)));
+                    // currency symbol mapping
+                    $symbols = ['INR' => '₹', 'USD' => '$', 'EUR' => '€', 'GBP' => '£'];
+                    $symbol = $symbols[$plan->currency] ?? '$';
+
+                    // improved feature extraction
+                    $descMarkup = $plan->description;
+                    // convert common tags to newlines for better splitting
+                    $descMarkup = str_replace(['<li>', '</li>', '<p>', '</p>', '<br>', '<br/>', '<br />'], ["\n", "\n", "\n", "\n", "\n", "\n", "\n"], $descMarkup);
+                    $descMarkup = html_entity_decode($descMarkup);
+                    $descMarkup = strip_tags($descMarkup);
+                    $features = array_filter(array_map('trim', explode("\n", $descMarkup)));
                 @endphp
                 
                 <div class="{{ $cardClass }}">
@@ -212,10 +219,10 @@
                         <!-- Price -->
                         <div class="flex items-baseline gap-1 mb-7">
                             <span class="price-num" style="font-size:clamp(2.2rem,5vw,3.2rem);color:{{ $color }};">
-                                ${{ $plan->discounted_price ?? $plan->actual_price }}
+                                {{ $symbol }}{{ $plan->discounted_price ?? $plan->actual_price }}
                             </span>
                             @if($plan->discounted_price)
-                            <span class="text-sm line-through opacity-30 ml-2" style="color:#fff;">${{ $plan->actual_price }}</span>
+                            <span class="text-sm line-through opacity-30 ml-2" style="color:#fff;">{{ $symbol }}{{ $plan->actual_price }}</span>
                             @endif
                             <span class="text-sm" style="color:rgba(226,232,240,0.4);">/month</span>
                         </div>
@@ -242,7 +249,7 @@
                                 @foreach($plan->offers as $offer)
                                 <div class="check-item" style="color: #00D4FF; font-weight: 600;">
                                     <i data-lucide="zap" class="icon-yes" style="width:15px;height:15px; color: #00D4FF;"></i>
-                                    <span>{{ $offer->name }} (Included)</span>
+                                    <span>{{ $offer->name }}</span>
                                 </div>
                                 @endforeach
                             @endif
@@ -254,7 +261,7 @@
             </div>
 
             <p class="text-center text-xs mt-8" style="color:rgba(226,232,240,0.3);">
-                All prices in USD. Cancel anytime. No hidden fees. Risk Disclosure applies.
+                * All prices are as per the selected currency. Cancel anytime. No hidden fees. Risk Disclosure applies.
             </p>
         </div>
     </section>

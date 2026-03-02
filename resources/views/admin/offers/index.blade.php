@@ -33,9 +33,13 @@
             <div class="text-muted" style="font-size:.82rem;margin-bottom:16px;line-height:1.5">{{ Str::limit($offer->description, 80) }}</div>
 
             <div style="margin-bottom:12px">
+                @php
+                    $symbols = ['INR' => '₹', 'USD' => '$', 'EUR' => '€', 'GBP' => '£'];
+                    $symbol = ($offer->plan && isset($symbols[$offer->plan->currency])) ? $symbols[$offer->plan->currency] : '₹';
+                @endphp
                 <div style="display:flex;align-items:baseline;gap:8px">
-                    <span style="font-size:1.6rem;font-weight:800;color:var(--gold)">₹{{ number_format($offer->discounted_price, 2) }}</span>
-                    <del class="text-muted">₹{{ number_format($offer->actual_price, 2) }}</del>
+                    <span style="font-size:1.6rem;font-weight:800;color:var(--gold)">{{ $symbol }}{{ number_format($offer->discounted_price, 2) }}</span>
+                    <del class="text-muted">{{ $symbol }}{{ number_format($offer->actual_price, 2) }}</del>
                     <span class="badge badge-success">{{ $offer->discount_percent }}% OFF</span>
                 </div>
                 @if($offer->valid_until)

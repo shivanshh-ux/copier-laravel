@@ -62,7 +62,12 @@
             text-transform: uppercase; margin-top: 2px;
         }
 
-        .sidebar-nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+        .sidebar-nav { 
+            flex: 1; padding: 16px 0; overflow-y: auto; 
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        .sidebar-nav::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
         .nav-section-label {
             font-size: .65rem; font-weight: 600; letter-spacing: 2px;
             color: var(--text-muted); text-transform: uppercase;

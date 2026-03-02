@@ -41,11 +41,15 @@
                         <label class="form-label">Assigned Plan</label>
                         <select name="plan_id" class="form-control">
                             <option value="">— No Plan —</option>
-                            @foreach($plans as $plan)
-                                <option value="{{ $plan->id }}" {{ old('plan_id', $customer->plan_id) == $plan->id ? 'selected' : '' }}>
-                                    {{ $plan->name }} (₹{{ number_format($plan->discounted_price ?? $plan->actual_price, 2) }})
-                                </option>
-                            @endforeach
+                        @php
+                            $symbols = ['INR' => '₹', 'USD' => '$', 'EUR' => '€', 'GBP' => '£'];
+                        @endphp
+                        @foreach($plans as $plan)
+                            @php $symbol = $symbols[$plan->currency] ?? '₹'; @endphp
+                            <option value="{{ $plan->id }}" {{ old('plan_id', $customer->plan_id) == $plan->id ? 'selected' : '' }}>
+                                {{ $plan->name }} ({{ $symbol }}{{ number_format($plan->discounted_price ?? $plan->actual_price, 2) }})
+                            </option>
+                        @endforeach
                         </select>
                         @error('plan_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>

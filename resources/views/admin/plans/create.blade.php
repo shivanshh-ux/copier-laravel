@@ -71,15 +71,26 @@
                     @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label">Choose Currency Type *</label>
+                    <select name="currency" class="form-control" id="currencySelector" required>
+                        <option value="INR" {{ old('currency', 'INR') == 'INR' ? 'selected' : '' }}>Indian Rupee (₹)</option>
+                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>US Dollar ($)</option>
+                        <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>Euro (€)</option>
+                        <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>British Pound (£)</option>
+                    </select>
+                    @error('currency')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Actual Price (₹) *</label>
+                        <label class="form-label">Actual Price (<span class="currency-symbol">₹</span>) *</label>
                         <input type="number" name="actual_price" class="form-control" step="0.01" min="0" placeholder="0.00" value="{{ old('actual_price') }}" required id="actualPrice">
                         <div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">Original / MRP price</div>
                         @error('actual_price')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Discounted Price (₹)</label>
+                        <label class="form-label">Discounted Price (<span class="currency-symbol">₹</span>)</label>
                         <input type="number" name="discounted_price" class="form-control" step="0.01" min="0" placeholder="Leave blank if none" value="{{ old('discounted_price') }}" id="discountPrice">
                         <div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">Price after discount (optional)</div>
                         @error('discounted_price')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -150,15 +161,38 @@
     const ap = document.getElementById('actualPrice');
     const dp = document.getElementById('discountPrice');
     const preview = document.getElementById('discountPreview');
+    const currencySelector = document.getElementById('currencySelector');
+    const currencySymbols = document.querySelectorAll('.currency-symbol');
+
+    const symbols = {
+        'INR': '₹',
+        'USD': '$',
+        'EUR': '€',
+        'GBP': '£'
+    };
+
+    function updateSymbols() {
+        const selected = currencySelector.value;
+        const symbol = symbols[selected] || '₹';
+        currencySymbols.forEach(el => el.textContent = symbol);
+        calcDiscount();
+    }
+
     function calcDiscount() {
         const a = parseFloat(ap.value), d = parseFloat(dp.value);
+        const symbol = symbols[currencySelector.value] || '₹';
         if (a > 0 && d > 0 && d < a) {
             preview.style.display = 'block';
-            document.getElementById('savingsAmt').textContent = '₹' + (a-d).toFixed(2);
+            document.getElementById('savingsAmt').textContent = symbol + (a-d).toFixed(2);
             document.getElementById('discountPct').textContent = Math.round(((a-d)/a)*100) + '% OFF';
         } else { preview.style.display = 'none'; }
     }
+
     ap.addEventListener('input', calcDiscount);
     dp.addEventListener('input', calcDiscount);
+    currencySelector.addEventListener('change', updateSymbols);
+
+    // Initialize symbols
+    updateSymbols();
 </script>
 @endpush
