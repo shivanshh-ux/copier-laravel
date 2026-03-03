@@ -210,6 +210,17 @@
     }
     .close-modal:hover { background: rgba(0,212,255,0.15); border-color: rgba(0,212,255,0.4); color: #00D4FF; transform: rotate(90deg); }
 
+    @media (max-width: 640px) {
+        #modal-content { padding: 2.5rem 1.5rem; border-radius: 1.5rem; }
+        #modal-content h2 { font-size: 2.2rem !important; }
+        #modal-content .text-lg { font-size: 1.05rem !important; }
+    }
+    @media (max-width: 480px) {
+        #modal-content { padding: 2rem 1.25rem; }
+        #modal-content h2 { font-size: 1.8rem !important; }
+        #modal-content .feat-icon { width: 42px; height: 42px; }
+    }
+
 
     /* ── STAT NUM ── */
     .stat-num { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
@@ -279,6 +290,7 @@
     /* ── MOBILE ── */
     @media (max-width: 480px) {
         .btn-primary, .btn-outline { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
+        .section-tag::before, .section-tag::after { width: 15px; }
     }
 
     /* ── PAGE TRANSITION OVERLAY ── */
@@ -577,7 +589,7 @@
             </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        <div id="reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             @foreach($reviews as $i => $t)
             @php
                 $delays = ['reveal-d1', 'reveal-d2', 'reveal-d3', 'reveal-d4', 'reveal-d5', 'reveal-d6'];
@@ -988,6 +1000,55 @@
                     color: '#e2e8f0',
                     confirmButtonColor: '#00D4FF'
                 });
+                
+                // Dynamically add the review to the grid
+                const grid = document.getElementById('reviews-grid');
+                if (grid && data.review) {
+                    const r = data.review;
+                    const avatarHtml = r.avatar 
+                        ? `<img src="/${r.avatar}" style="width:100%;height:100%;object-fit:cover">`
+                        : r.name[0];
+                    
+                    let starsHtml = '';
+                    for (let s = 0; s < 5; s++) {
+                        const color = s < r.rating ? '#FBBF24' : 'rgba(255,255,255,0.1)';
+                        const fill = s < r.rating ? '#FBBF24' : 'transparent';
+                        starsHtml += `<i data-lucide="star" style="width:13px;height:13px;color:${color};fill:${fill};"></i>`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'card reveal visible from-bottom rounded-2xl p-6 tilt-3d';
+                    card.innerHTML = `
+                        <div style="font-size:3rem;line-height:1;color:rgba(0,212,255,0.15);font-family:serif;margin-bottom:0.5rem;">"</div>
+                        <div class="flex gap-1 mb-4">${starsHtml}</div>
+                        <p class="text-sm leading-relaxed mb-5" style="color:rgba(226,232,240,0.75);">${r.content}</p>
+                        <div class="flex items-center gap-3" style="border-top:1px solid rgba(0,212,255,0.1);padding-top:1rem;">
+                            <div class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 text-sm font-bold" style="background:linear-gradient(135deg,#1E5FAD,#00D4FF);color:#fff;font-family:'Rajdhani',sans-serif;">
+                                ${avatarHtml}
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold" style="color:#E2E8F0;">${r.name}</p>
+                                <p class="text-xs" style="color:#00D4FF;opacity:0.7;">${r.role || ''}</p>
+                            </div>
+                        </div>
+                    `;
+                    grid.prepend(card);
+                    if (window.lucide) lucide.createIcons();
+                    
+                    // Re-initialize tilt for new card
+                    card.addEventListener('mousemove', e => {
+                        const rect = card.getBoundingClientRect();
+                        const cx = rect.left + rect.width / 2;
+                        const cy = rect.top + rect.height / 2;
+                        const dx = (e.clientX - cx) / (rect.width / 2);
+                        const dy = (e.clientY - cy) / (rect.height / 2);
+                        card.style.transform = `perspective(800px) rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg) translateY(-8px)`;
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = '';
+                    });
+                }
+
                 closeReviewModal();
             } else {
                 Swal.fire({

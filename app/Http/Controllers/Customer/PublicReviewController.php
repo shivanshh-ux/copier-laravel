@@ -27,7 +27,7 @@ class PublicReviewController extends Controller
         }
 
         $data = $request->only(['name', 'role', 'rating', 'content']);
-        $data['is_active'] = false; // Admin must approve
+        $data['is_active'] = true; // Appears immediately
 
         if ($request->hasFile('avatar')) {
             $imageName = time().'.'.$request->avatar->extension();
@@ -35,11 +35,12 @@ class PublicReviewController extends Controller
             $data['avatar'] = 'uploads/reviews/'.$imageName;
         }
 
-        Review::create($data);
+        $review = Review::create($data);
 
         return response()->json([
             'success' => true,
-            'message' => 'Review submitted successfully! It will appear once approved by admin.'
+            'message' => 'Review submitted successfully!',
+            'review'  => $review
         ]);
     }
 }

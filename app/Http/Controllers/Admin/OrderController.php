@@ -101,4 +101,10 @@ class OrderController extends Controller
         $order->update($request->only(['customer_id', 'plan_id', 'amount', 'status', 'notes']));
         return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully.');
     }
+
+    public function destroy(Order $order)
+    {
+        $order->delete();
+        return redirect()->route('admin.orders.index')->with('success', 'Order deleted successfully.');
+    }
 }

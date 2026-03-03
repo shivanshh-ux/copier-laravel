@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\ServiceController;
 use App\Http\Controllers\Customer\Auth\LoginController;
 use App\Http\Controllers\Customer\Auth\RegisterController;
 use App\Http\Controllers\Customer\ProfileController;
+use App\Http\Controllers\Customer\RazorpayController;
 
 // ─── Customer Frontend Routes ─────────────────────────────────────────────────
 Route::get('/', function () { 
@@ -38,6 +39,14 @@ Route::middleware('guest:customer')->group(function () {
 Route::middleware('auth:customer')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout.customer');
+
+    // Plan Activation
+    Route::post('/plans/activate', [\App\Http\Controllers\Customer\PlanActivationController::class, 'activate'])->name('plans.activate');
+
+    // Razorpay Integration
+    Route::post('/razorpay/initiate', [RazorpayController::class, 'initiatePayment'])->name('razorpay.initiate');
+    Route::get('/checkout/{order}', [RazorpayController::class, 'showCheckout'])->name('razorpay.checkout');
+    Route::post('/razorpay/callback', [RazorpayController::class, 'handleCallback'])->name('razorpay.callback');
 });
 
 // ─── Admin Panel Routes ───────────────────────────────────────────────────────

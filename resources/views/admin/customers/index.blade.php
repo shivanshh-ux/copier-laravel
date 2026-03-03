@@ -26,7 +26,6 @@
             <option value="inactive" {{ request('status')=='inactive' ? 'selected':'' }}>Inactive</option>
         </select>
         <button type="submit" class="btn btn-gold"><i class="fas fa-filter"></i> Filter</button>
-        <a href="{{ route('admin.customers.index') }}" class="btn btn-outline"><i class="fas fa-times"></i> Clear</a>
     </form>
 </div>
 
@@ -40,15 +39,18 @@
 @push('styles')
 <style>
     .tabulator { background-color: transparent !important; border: none !important; color: var(--text) !important; font-size: 0.88rem !important; }
+    .tabulator .tabulator-tableHolder { background-color: transparent !important; }
     .tabulator-header { background-color: var(--navy-2) !important; color: var(--text-muted) !important; border-bottom: 1px solid var(--border) !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
-    .tabulator-header .tabulator-col { background-color: transparent !important; border: none !important; padding: 12px !important; }
-    .tabulator-row { background-color: transparent !important; border-bottom: 1px solid var(--border) !important; color: var(--text) !important; min-height: 55px !important; display: flex; align-items: center; }
-    .tabulator-row:hover { background-color: rgba(255,255,255,0.02) !important; }
-    .tabulator-row.tabulator-row-even { background-color: rgba(255,255,255,0.01) !important; }
+    .tabulator-header .tabulator-col { background-color: transparent !important; border-right: 1px solid var(--border) !important; padding: 12px !important; }
+    .tabulator-header .tabulator-col:last-child { border-right: none !important; }
+    .tabulator-row { background-color: rgba(0,0,0,0.85) !important; border-bottom: 1px solid var(--border) !important; color: var(--text) !important; min-height: 55px !important; display: flex; align-items: center; }
+    .tabulator-row:hover { background-color: rgba(0,0,0,0.95) !important; }
+    .tabulator-row.tabulator-row-even { background-color: rgba(0,0,0,0.75) !important; }
+    .tabulator-row .tabulator-cell { padding: 14px 16px !important; border-right: 1px solid var(--border) !important; display: flex; align-items: center; background-color: transparent !important; }
+    .tabulator-row .tabulator-cell:last-child { border-right: none !important; }
     .tabulator-footer { background-color: var(--navy-2) !important; border-top: 1px solid var(--border) !important; color: var(--text-muted) !important; padding: 10px !important; }
     .tabulator-page { background: rgba(255,255,255,0.05) !important; color: var(--text-muted) !important; border: 1px solid var(--border) !important; border-radius: 6px !important; margin: 0 2px !important; }
     .tabulator-page.active { background: var(--gold) !important; color: var(--navy) !important; border-color: var(--gold) !important; font-weight: 700 !important; }
-    .tabulator-row .tabulator-cell { padding: 14px 16px !important; border-right: none !important; display: flex; align-items: center; }
 </style>
 @endpush
 
@@ -71,6 +73,7 @@
             pagination: "remote",
             paginationSize: 15,
             layout: "fitColumns",
+            movableColumns: true,
             height: "600px",
             placeholder: "<div class='empty-state'><i class='fas fa-users'></i><p>No customers found</p></div>",
             ajaxError: function(error) {
@@ -133,10 +136,19 @@
             e.preventDefault();
             const search = document.getElementById('searchInput').value;
             const status = document.getElementById('statusFilter').value;
-            table.setFilter([
-                {field: "search", type: "like", value: search},
-                {field: "status", type: "=", value: status}
-            ]);
+            const filters = [];
+            if (search) {
+                filters.push({field: "search", type: "like", value: search});
+            }
+            if (status) {
+                filters.push({field: "status", type: "=", value: status});
+            }
+            table.setFilter(filters);
+        });
+
+        // Also apply filter when status dropdown changes
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            document.getElementById('filterForm').dispatchEvent(new Event('submit'));
         });
 
         // Selection update
