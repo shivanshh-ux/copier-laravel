@@ -16,6 +16,8 @@
 
     @if(request()->routeIs('home'))
         @include('customer.partials.preloader_styles')
+    @elseif(request()->routeIs('about', 'services', 'help'))
+        @include('customer.partials.page_loader_styles')
     @endif
 
     <!-- AOS (Animate On Scroll) -->
@@ -74,6 +76,8 @@
 
     @if(request()->routeIs('home'))
         @include('customer.partials.preloader')
+    @elseif(request()->routeIs('about', 'services', 'help'))
+        @include('customer.partials.page_loader')
     @endif
     @hasSection('hide-header')
     @else
@@ -184,6 +188,17 @@
                     setTimeout(() => { overlay.style.transition = ''; }, 50);
                 }
             });
+
+            // Hide Page Loader when fully loaded
+            const pageLoader = document.getElementById('page-loader');
+            if (pageLoader) {
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        pageLoader.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }, 300); // Slight delay for smoothness
+                });
+            }
         });
     </script>
 
