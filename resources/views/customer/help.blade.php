@@ -20,6 +20,11 @@ $faqs = [
     ['category' => 'Security', 'q' => 'Is my trading data and financial information secure?', 'a' => 'We use bank-level AES-256 encryption for all data at rest and in transit. We never store your broker passwords — only read-only API keys. Our infrastructure is SOC 2 compliant.'],
     ['category' => 'Billing', 'q' => 'What payment methods do you accept?', 'a' => 'We accept all major credit/debit cards (Visa, Mastercard, AmEx), PayPal, bank transfers, and select cryptocurrencies (BTC, USDT).'],
     ['category' => 'Technical', 'q' => 'What happens to my trades if Copier goes offline?', 'a' => 'Our platform has 99.9% uptime with dual-cloud redundancy. Any open trades remain active at your broker. We recommend VPS hosting for additional protection.'],
+    ['category' => 'Getting Started', 'q' => 'Do I need programming experience?', 'a' => 'No. Copier offers a strategy library of 50+ pre-built algorithms. Simply choose one, configure risk parameters, connect your broker, and go live in minutes.'],
+    ['category' => 'Trading', 'q' => 'Which brokers does Copier support?', 'a' => 'We integrate with all major brokers via MT4, MT5, and FIX API — including Interactive Brokers, Oanda, Binance, Kraken, and 80+ others globally.'],
+    ['category' => 'Security', 'q' => 'How is my capital protected?', 'a' => 'Your funds remain in your own broker account at all times. Copier never touches your capital — we only send trade instructions to your broker via a secure API connection.'],
+    ['category' => 'Trading', 'q' => 'What is the minimum capital required?', 'a' => 'There is no hard minimum. However, for effective position sizing and diversification, most traders start with $500–$2,000 depending on their strategy.'],
+    ['category' => 'Trading', 'q' => 'Can I run multiple strategies simultaneously?', 'a' => 'Yes. You can run unlimited strategies across multiple broker accounts, each with independent risk settings and allocation budgets.'],
 ];
 @endphp
 

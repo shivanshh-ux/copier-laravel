@@ -31,4 +31,9 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function masterAccount()
+    {
+        return $this->hasOne(MasterAccount::class);
+    }
 }

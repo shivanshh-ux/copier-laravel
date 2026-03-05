@@ -47,6 +47,12 @@ Route::middleware('auth:customer')->group(function () {
     Route::post('/razorpay/initiate', [RazorpayController::class, 'initiatePayment'])->name('razorpay.initiate');
     Route::get('/checkout/{order}', [RazorpayController::class, 'showCheckout'])->name('razorpay.checkout');
     Route::post('/razorpay/callback', [RazorpayController::class, 'handleCallback'])->name('razorpay.callback');
+
+    // Account Management (Master & Slave)
+    Route::post('/accounts/master', [\App\Http\Controllers\Customer\AccountController::class, 'storeMaster'])->name('accounts.master.store');
+    Route::post('/accounts/master/update', [\App\Http\Controllers\Customer\AccountController::class, 'updateMaster'])->name('accounts.master.update');
+    Route::post('/accounts/slave', [\App\Http\Controllers\Customer\AccountController::class, 'storeSlave'])->name('accounts.slave.store');
+    Route::post('/accounts/slave/{slave}/update', [\App\Http\Controllers\Customer\AccountController::class, 'updateSlave'])->name('accounts.slave.update');
 });
 
 // ─── Admin Panel Routes ───────────────────────────────────────────────────────

@@ -469,34 +469,6 @@
         </div>
     </section>
 
-    <!-- ── FAQ ── -->
-    <section class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8" style="background:transparent;backdrop-filter:blur(2px);">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-10 sm:mb-14 reveal from-bottom">
-                <div class="section-tag">FAQ</div>
-                <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.7rem,4vw,3rem);color:#fff;">Common Questions</h2>
-            </div>
-            @php
-            $faqs=[
-                ['q'=>'Can I change my plan anytime?','a'=>'Yes! You can upgrade or downgrade your plan at any time. Changes take effect on your next billing cycle with prorated adjustments.'],
-                ['q'=>'Do I need trading experience?','a'=>'No experience needed for Starter. Our strategy library has beginner-friendly options, and our onboarding guides you step by step.'],
-                ['q'=>'What brokers are supported?','a'=>'We support 50+ brokers via MT4/MT5 including IC Markets, Pepperstone, FP Markets, and most major regulated brokers worldwide.'],
-                ['q'=>'Is my money safe?','a'=>'Your funds remain in your own brokerage account at all times. We never hold or access your capital — only your trade instructions via API.'],
-            ];
-            @endphp
-            @foreach($faqs as $i=>$faq)
-            <div class="reveal from-left reveal-d{{ ($i%4)+1 }} mb-4 faq-item" style="padding:1.25rem 1.5rem;background:transparent;border-radius:1rem;border:1px solid var(--border);cursor:pointer;transition:border-color 0.3s ease;">
-                <div class="flex items-center justify-between gap-4">
-                    <h3 class="font-semibold text-sm sm:text-base" style="color:#fff;font-family:'Rajdhani',sans-serif;">{{ $faq['q'] }}</h3>
-                    <i data-lucide="chevron-down" class="faq-icon flex-shrink-0" style="width:18px;height:18px;color:#00D4FF;transition:transform 0.3s ease;"></i>
-                </div>
-                <div class="faq-body" style="max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.23,1,0.32,1);">
-                    <p class="text-sm leading-relaxed mt-3" style="color:rgba(226,232,240,0.6);">{{ $faq['a'] }}</p>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </section>
 
     <!-- ── CTA ── -->
     <section class="py-16 px-4 sm:px-6 lg:px-8" style="border-top:1px solid rgba(0,212,255,0.08);">

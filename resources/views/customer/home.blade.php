@@ -1,8 +1,8 @@
-@extends('customer.layouts.app')
+﻿@extends('customer.layouts.app')
 
 @push('styles')
 <style>
-    /* ── THEME VARIABLES ── */
+    /* â”€â”€ THEME VARIABLES â”€â”€ */
     :root {
         --cyan: #00D4FF;
         --blue: #1E5FAD;
@@ -13,7 +13,7 @@
     }
 
 
-    /* ── GRID OVERLAY ── */
+    /* â”€â”€ GRID OVERLAY â”€â”€ */
     .grid-bg {
         background-image:
             linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
@@ -21,7 +21,7 @@
         background-size: 60px 60px;
     }
 
-    /* ── ANIMATIONS ── */
+    /* â”€â”€ ANIMATIONS â”€â”€ */
     @keyframes fadeUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
     @keyframes shimmer { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
@@ -46,7 +46,7 @@
     .anim-float     { animation: float 5s ease-in-out infinite; }
     .pulse-glow     { animation: pulseGlow 3s ease-in-out infinite; }
 
-    /* ── GRADIENT TEXT ── */
+    /* â”€â”€ GRADIENT TEXT â”€â”€ */
     .gradient-text {
         background: linear-gradient(90deg, #fff 0%, #00D4FF 55%, #1E5FAD 100%);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -58,7 +58,7 @@
         animation: shimmer 4s linear infinite;
     }
 
-    /* ── SCROLL REVEAL ── */
+    /* â”€â”€ SCROLL REVEAL â”€â”€ */
     .reveal {
         opacity: 0;
         transition: opacity 0.85s cubic-bezier(0.23,1,0.32,1),
@@ -78,7 +78,7 @@
     .reveal-d5 { transition-delay: 0.40s; }
     .reveal-d6 { transition-delay: 0.48s; }
 
-    /* ── CARDS ── */
+    /* â”€â”€ CARDS â”€â”€ */
     .card {
         transition: transform 0.4s cubic-bezier(0.23,1,0.32,1),
                     box-shadow 0.4s ease,
@@ -115,7 +115,7 @@
     }
     .card:hover::after { opacity: 1; animation: scanDown 2s linear infinite; }
 
-    /* ── FEAT ICON ── */
+    /* â”€â”€ FEAT ICON â”€â”€ */
     .feat-icon {
         width: 54px; height: 54px; border-radius: 14px;
         display: flex; align-items: center; justify-content: center;
@@ -126,7 +126,7 @@
     }
     .card:hover .feat-icon { box-shadow: 0 0 24px rgba(0,212,255,0.4); background: linear-gradient(135deg, rgba(30,95,173,0.6), rgba(0,212,255,0.35)); }
 
-    /* ── BUTTONS ── */
+    /* â”€â”€ BUTTONS â”€â”€ */
     .btn-primary {
         display: inline-flex; align-items: center; gap: 0.5rem;
         padding: 0.9rem 2.2rem; border-radius: 0.875rem;
@@ -158,7 +158,7 @@
     }
     .btn-outline:hover { background: rgba(0,212,255,0.1); border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.15); }
 
-    /* ── MODAL ── */
+    /* â”€â”€ MODAL â”€â”€ */
     #feature-modal {
         display: none;
         position: fixed;
@@ -222,15 +222,15 @@
     }
 
 
-    /* ── STAT NUM ── */
+    /* â”€â”€ STAT NUM â”€â”€ */
     .stat-num { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
 
-    /* ── TICKER ── */
+    /* â”€â”€ TICKER â”€â”€ */
     .ticker-wrapper { overflow: hidden; }
     .ticker-track { display: flex; animation: ticker 30s linear infinite; width: max-content; }
     .ticker-track:hover { animation-play-state: paused; }
 
-    /* ── SECTION HEADING DECO ── */
+    /* â”€â”€ SECTION HEADING DECO â”€â”€ */
     .section-tag {
         display: inline-flex; align-items: center; gap: 0.5rem;
         font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
@@ -243,7 +243,7 @@
     }
     .section-tag::after { background: linear-gradient(270deg, transparent, rgba(0,212,255,0.5)); }
 
-    /* ── STEP CIRCLE ── */
+    /* â”€â”€ STEP CIRCLE â”€â”€ */
     .step-circle {
         width: 64px; height: 64px; border-radius: 20px;
         display: flex; align-items: center; justify-content: center;
@@ -254,14 +254,14 @@
     }
     .step-circle:hover { box-shadow: 0 0 0 12px rgba(0,212,255,0.12), 0 0 60px rgba(0,212,255,0.5); transform: scale(1.08); }
 
-    /* ── ORB DECORATION ── */
+    /* â”€â”€ ORB DECORATION â”€â”€ */
     .orb {
         position: absolute; border-radius: 50%;
         filter: blur(70px); pointer-events: none;
         animation: orbPulse 6s ease-in-out infinite;
     }
 
-    /* ── CTA CARD ── */
+    /* â”€â”€ CTA CARD â”€â”€ */
     .cta-card {
         background: linear-gradient(135deg, rgba(30,95,173,0.22), rgba(0,212,255,0.08));
         border: 1px solid rgba(0,212,255,0.2);
@@ -284,16 +284,16 @@
         padding: 2px;
     }
 
-    /* ── HOVER 3D TILT (JS) ── */
+    /* â”€â”€ HOVER 3D TILT (JS) â”€â”€ */
     .tilt-3d { transition: transform 0.15s ease; transform-style: preserve-3d; }
 
-    /* ── MOBILE ── */
+    /* â”€â”€ MOBILE â”€â”€ */
     @media (max-width: 480px) {
         .btn-primary, .btn-outline { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
         .section-tag::before, .section-tag::after { width: 15px; }
     }
 
-    /* ── PAGE TRANSITION OVERLAY ── */
+    /* â”€â”€ PAGE TRANSITION OVERLAY â”€â”€ */
     #page-transition {
         position:fixed; inset:0; z-index:9999;
         background:linear-gradient(135deg, #020914, #0A1628);
@@ -358,7 +358,7 @@
 
         <!-- Sub -->
         <p class="anim-fade-up-3 mx-auto mb-10 leading-relaxed max-w-2xl" style="font-size:clamp(0.95rem,2vw,1.15rem);color:rgba(226,232,240,0.65);">
-            Copier connects your strategies to markets 24/7 — executing trades with speed, discipline, and zero emotion. Institution-grade tools for every trader.
+            Copier connects your strategies to markets 24/7 executing trades with speed, discipline, and zero emotion. Institution-grade tools for every trader.
         </p>
 
         <!-- CTAs -->
@@ -484,6 +484,86 @@
     </div>
 </section>
 
+<!-- ===================== COMPARISON ===================== -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden" style="background:rgba(6,13,26,0.65);backdrop-filter:blur(2px);">
+    <div class="orb" style="width:420px;height:420px;background:rgba(0,212,255,0.06);bottom:-80px;right:-100px;"></div>
+    <div class="max-w-5xl mx-auto relative">
+        <div class="text-center mb-14 reveal from-bottom">
+            <div class="section-tag">Why Switch</div>
+            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+                Copier vs. <span class="gradient-text">The Rest</span>
+            </h2>
+            <p class="mt-3 max-w-xl mx-auto text-sm" style="color:rgba(226,232,240,0.50);">See why professional traders are switching to Copier from traditional platforms.</p>
+        </div>
+
+        <div class="reveal from-bottom" style="border:1px solid rgba(0,212,255,0.15);border-radius:1.5rem;overflow:hidden;backdrop-filter:blur(12px);">
+            <!-- Header row -->
+            <div class="grid grid-cols-3 text-xs font-bold uppercase tracking-widest" style="background:rgba(0,212,255,0.06);border-bottom:1px solid rgba(0,212,255,0.12);">
+                <div class="p-4 sm:p-5" style="color:rgba(226,232,240,0.4);">Feature</div>
+                <div class="p-4 sm:p-5 text-center" style="color:#00D4FF;">Copier</div>
+                <div class="p-4 sm:p-5 text-center" style="color:rgba(226,232,240,0.35);">Traditional Platforms</div>
+            </div>
+            @php
+            $comparisons = [
+                ['feat'=>'Execution Speed',       'us'=>'< 50ms average',      'them'=>'200ms â€“ 2s'],
+                ['feat'=>'Strategy Automation',   'us'=>'Full (Python, C++)',   'them'=>'Limited / Manual'],
+                ['feat'=>'Risk Controls',         'us'=>'Granular & Real-time', 'them'=>'Basic stop-loss only'],
+                ['feat'=>'Portfolio Analytics',   'us'=>'Monte Carlo + AI',     'them'=>'Basic P&L charts'],
+                ['feat'=>'Multi-Asset Support',   'us'=>'Stocks, Forex, Crypto','them'=>'Single asset class'],
+                ['feat'=>'24/7 Market Coverage',  'us'=>'Fully automated',      'them'=>'Manual monitoring'],
+                ['feat'=>'Fee Structure',         'us'=>'Performance-based',    'them'=>'Fixed + hidden fees'],
+            ];
+            @endphp
+            @foreach($comparisons as $i => $c)
+            <div class="grid grid-cols-3" style="border-bottom:1px solid rgba(0,212,255,{{ $i < count($comparisons)-1 ? '0.08' : '0' }});">
+                <div class="p-4 sm:p-5 text-sm font-medium" style="color:rgba(226,232,240,0.65);">{{ $c['feat'] }}</div>
+                <div class="p-4 sm:p-5 text-center text-sm flex items-center justify-center gap-2 font-semibold" style="color:#E2E8F0;">
+                    <i data-lucide="check-circle-2" style="width:15px;height:15px;color:#00D4FF;flex-shrink:0;"></i>
+                    {{ $c['us'] }}
+                </div>
+                <div class="p-4 sm:p-5 text-center text-sm" style="color:rgba(226,232,240,0.35);">{{ $c['them'] }}</div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-20">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal from-bottom">
+            <div class="section-tag">Simple Process</div>
+            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+                Up and Running in <span class="gradient-text">4 Steps</span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-10 sm:gap-6 relative">
+            <!-- Connector line -->
+            <div class="hidden sm:block absolute top-8 left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-px" style="background:linear-gradient(90deg,rgba(0,212,255,0.4),rgba(0,212,255,0.7),rgba(0,212,255,0.4));top:32px;"></div>
+
+            @php
+            $steps = [
+                ['n'=>'01','icon'=>'user-plus','title'=>'Create Account','desc'=>'Sign up in under 2 minutes. No credit card needed for your free trial.','dir'=>'from-left'],
+                ['n'=>'02','icon'=>'credit-card','title'=>'Pick a Plan','desc'=>'Choose a plan that fits your trading volume and needs.','dir'=>'from-bottom'],
+                ['n'=>'03','icon'=>'sliders','title'=>'Configure Strategy','desc'=>'Choose from our strategy library or upload your own algorithm.','dir'=>'from-bottom'],
+                ['n'=>'04','icon'=>'play','title'=>'Go Live','desc'=>'Connect your broker, review risk settings, and activate your strategy.','dir'=>'from-right'],
+            ];
+            @endphp
+            @foreach($steps as $i=>$s)
+            <div class="reveal {{ $s['dir'].' reveal-d'.($i+1) }} flex flex-col items-center text-center">
+                <div class="step-circle mb-5">
+                    <i data-lucide="{{ $s['icon'] }}" style="width:26px;height:26px;color:#fff;stroke-width:2;"></i>
+                </div>
+                <span class="text-xs font-bold tracking-widest mb-2" style="color:rgba(0,212,255,0.45);">{{ $s['n'] }}</span>
+                <h3 class="font-semibold text-lg mb-2" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $s['title'] }}</h3>
+                <p class="text-sm max-w-xs" style="color:rgba(226,232,240,0.55);">{{ $s['desc'] }}</p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
 <!-- ===================== LEARNING RESOURCES (MEDIA) ===================== -->
 @if($media->count() > 0)
 <section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden">
@@ -534,38 +614,60 @@
 </section>
 @endif
 
-
-<!-- ===================== HOW IT WORKS ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20">
+<!-- ===================== TRUST STRIP ===================== -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16">
     <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-16 reveal from-bottom">
-            <div class="section-tag">Simple Process</div>
-            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
-                Up and Running in <span class="gradient-text">3 Steps</span>
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6 relative">
-            <!-- Connector line -->
-            <div class="hidden sm:block absolute top-8 left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px" style="background:linear-gradient(90deg,rgba(0,212,255,0.4),rgba(0,212,255,0.7),rgba(0,212,255,0.4));top:32px;"></div>
-
+        <p class="text-center text-xs font-bold uppercase tracking-[0.3em] mb-10 reveal from-bottom" style="color:rgba(226,232,240,0.3);">Powered By Industry-Leading Technology</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
             @php
-            $steps=[
-                ['n'=>'01','icon'=>'user-plus','title'=>'Create Account','desc'=>'Sign up in under 2 minutes. No credit card needed for your free trial.','dir'=>'from-left'],
-                ['n'=>'02','icon'=>'sliders','title'=>'Configure Strategy','desc'=>'Choose from our strategy library or upload your own algorithm.','dir'=>'from-bottom'],
-                ['n'=>'03','icon'=>'play','title'=>'Go Live','desc'=>'Connect your broker, review risk settings, and activate your strategy.','dir'=>'from-right'],
+            $tech = [
+                ['icon'=>'zap',      'name'=>'Ultra-Low Latency','sub'=>'Sub-50ms execution engine'],
+                ['icon'=>'shield',   'name'=>'SOC 2 Certified',  'sub'=>'Enterprise security audit'],
+                ['icon'=>'server',   'name'=>'99.9% Uptime',     'sub'=>'Redundant global infrastructure'],
+                ['icon'=>'trending-up','name'=>'AI-Powered',     'sub'=>'Real-time adaptive algorithms'],
             ];
             @endphp
-            @foreach($steps as $i=>$s)
-            <div class="reveal {{ $s['dir'].' reveal-d'.($i+1) }} flex flex-col items-center text-center">
-                <div class="step-circle mb-5">
-                    <i data-lucide="{{ $s['icon'] }}" style="width:26px;height:26px;color:#fff;stroke-width:2;"></i>
+            @foreach($tech as $i => $t)
+            <div class="reveal from-bottom reveal-d{{ $i+1 }} text-center p-5 rounded-2xl" style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3" style="background:linear-gradient(135deg,rgba(30,95,173,0.4),rgba(0,212,255,0.2));border:1px solid rgba(0,212,255,0.2);">
+                    <i data-lucide="{{ $t['icon'] }}" style="width:20px;height:20px;color:#00D4FF;"></i>
                 </div>
-                <span class="text-xs font-bold tracking-widest mb-2" style="color:rgba(0,212,255,0.45);">{{ $s['n'] }}</span>
-                <h3 class="font-semibold text-lg mb-2" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $s['title'] }}</h3>
-                <p class="text-sm max-w-xs" style="color:rgba(226,232,240,0.55);">{{ $s['desc'] }}</p>
+                <p class="font-bold text-sm mb-1" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $t['name'] }}</p>
+                <p class="text-xs" style="color:rgba(226,232,240,0.4);">{{ $t['sub'] }}</p>
             </div>
             @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- ===================== CTA BANNER ===================== -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-20">
+    <div class="max-w-4xl mx-auto reveal from-scale">
+        <div class="cta-card p-10 sm:p-14 text-center">
+            <div class="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
+                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.12) 0%,transparent 65%);"></div>
+            </div>
+            <!-- Decorative lines -->
+            <div class="absolute top-6 left-6 right-6 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
+            <div class="absolute bottom-6 left-6 right-6 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
+
+            <div class="relative">
+                <div class="section-tag justify-center mb-3">Limited Offer</div>
+                <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);color:#E2E8F0;">
+                    Ready to Trade on <span class="gradient-shimmer">Autopilot?</span>
+                </h2>
+                <p class="mb-8 max-w-xl mx-auto" style="font-size:0.95rem;color:rgba(226,232,240,0.6);">Join thousands of traders automating their strategies. Start your free 14-day trial â€” no credit card required.</p>
+                <div class="flex flex-wrap gap-3 justify-center">
+                    <a href="{{ route('signup') }}" class="btn-primary">
+                        <i data-lucide="rocket" style="width:16px;height:16px;"></i>
+                        <span>Start Free Trial</span>
+                    </a>
+                    <a href="{{ route('help') }}" class="btn-outline">
+                        <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+                        <span>Talk to Sales</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -625,157 +727,12 @@
     </div>
 </section>
 
-<!-- ===================== COMPARISON ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden" style="background:rgba(6,13,26,0.65);backdrop-filter:blur(2px);">
-    <div class="orb" style="width:420px;height:420px;background:rgba(0,212,255,0.06);bottom:-80px;right:-100px;"></div>
-    <div class="max-w-5xl mx-auto relative">
-        <div class="text-center mb-14 reveal from-bottom">
-            <div class="section-tag">Why Switch</div>
-            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
-                Copier vs. <span class="gradient-text">The Rest</span>
-            </h2>
-            <p class="mt-3 max-w-xl mx-auto text-sm" style="color:rgba(226,232,240,0.50);">See why professional traders are switching to Copier from traditional platforms.</p>
-        </div>
-
-        <div class="reveal from-bottom" style="border:1px solid rgba(0,212,255,0.15);border-radius:1.5rem;overflow:hidden;backdrop-filter:blur(12px);">
-            <!-- Header row -->
-            <div class="grid grid-cols-3 text-xs font-bold uppercase tracking-widest" style="background:rgba(0,212,255,0.06);border-bottom:1px solid rgba(0,212,255,0.12);">
-                <div class="p-4 sm:p-5" style="color:rgba(226,232,240,0.4);">Feature</div>
-                <div class="p-4 sm:p-5 text-center" style="color:#00D4FF;">Copier</div>
-                <div class="p-4 sm:p-5 text-center" style="color:rgba(226,232,240,0.35);">Traditional Platforms</div>
-            </div>
-            @php
-            $comparisons = [
-                ['feat'=>'Execution Speed',       'us'=>'< 50ms average',      'them'=>'200ms – 2s'],
-                ['feat'=>'Strategy Automation',   'us'=>'Full (Python, C++)',   'them'=>'Limited / Manual'],
-                ['feat'=>'Risk Controls',         'us'=>'Granular & Real-time', 'them'=>'Basic stop-loss only'],
-                ['feat'=>'Portfolio Analytics',   'us'=>'Monte Carlo + AI',     'them'=>'Basic P&L charts'],
-                ['feat'=>'Multi-Asset Support',   'us'=>'Stocks, Forex, Crypto','them'=>'Single asset class'],
-                ['feat'=>'24/7 Market Coverage',  'us'=>'Fully automated',      'them'=>'Manual monitoring'],
-                ['feat'=>'Fee Structure',         'us'=>'Performance-based',    'them'=>'Fixed + hidden fees'],
-            ];
-            @endphp
-            @foreach($comparisons as $i => $c)
-            <div class="grid grid-cols-3" style="border-bottom:1px solid rgba(0,212,255,{{ $i < count($comparisons)-1 ? '0.08' : '0' }});">
-                <div class="p-4 sm:p-5 text-sm font-medium" style="color:rgba(226,232,240,0.65);">{{ $c['feat'] }}</div>
-                <div class="p-4 sm:p-5 text-center text-sm flex items-center justify-center gap-2 font-semibold" style="color:#E2E8F0;">
-                    <i data-lucide="check-circle-2" style="width:15px;height:15px;color:#00D4FF;flex-shrink:0;"></i>
-                    {{ $c['us'] }}
-                </div>
-                <div class="p-4 sm:p-5 text-center text-sm" style="color:rgba(226,232,240,0.35);">{{ $c['them'] }}</div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- ===================== TRUST STRIP ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-16">
-    <div class="max-w-5xl mx-auto">
-        <p class="text-center text-xs font-bold uppercase tracking-[0.3em] mb-10 reveal from-bottom" style="color:rgba(226,232,240,0.3);">Powered By Industry-Leading Technology</p>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            @php
-            $tech = [
-                ['icon'=>'zap',      'name'=>'Ultra-Low Latency','sub'=>'Sub-50ms execution engine'],
-                ['icon'=>'shield',   'name'=>'SOC 2 Certified',  'sub'=>'Enterprise security audit'],
-                ['icon'=>'server',   'name'=>'99.9% Uptime',     'sub'=>'Redundant global infrastructure'],
-                ['icon'=>'trending-up','name'=>'AI-Powered',     'sub'=>'Real-time adaptive algorithms'],
-            ];
-            @endphp
-            @foreach($tech as $i => $t)
-            <div class="reveal from-bottom reveal-d{{ $i+1 }} text-center p-5 rounded-2xl" style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);">
-                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3" style="background:linear-gradient(135deg,rgba(30,95,173,0.4),rgba(0,212,255,0.2));border:1px solid rgba(0,212,255,0.2);">
-                    <i data-lucide="{{ $t['icon'] }}" style="width:20px;height:20px;color:#00D4FF;"></i>
-                </div>
-                <p class="font-bold text-sm mb-1" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $t['name'] }}</p>
-                <p class="text-xs" style="color:rgba(226,232,240,0.4);">{{ $t['sub'] }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- ===================== FAQ ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden" style="background:rgba(6,13,26,0.55);backdrop-filter:blur(2px);">
-    <div class="absolute inset-0 grid-bg opacity-25 pointer-events-none"></div>
-    <div class="max-w-3xl mx-auto relative">
-        <div class="text-center mb-14 reveal from-bottom">
-            <div class="section-tag">FAQ</div>
-            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
-                Common <span class="gradient-text">Questions</span>
-            </h2>
-        </div>
-        @php
-        $faqs = [
-            ['q'=>'Do I need programming experience?',
-             'a'=>'No. Copier offers a strategy library of 50+ pre-built algorithms. Simply choose one, configure risk parameters, connect your broker, and go live in minutes.'],
-            ['q'=>'Which brokers does Copier support?',
-             'a'=>'We integrate with all major brokers via MT4, MT5, and FIX API — including Interactive Brokers, Oanda, Binance, Kraken, and 80+ others globally.'],
-            ['q'=>'How is my capital protected?',
-             'a'=>'Your funds remain in your own broker account at all times. Copier never touches your capital — we only send trade instructions to your broker via a secure API connection.'],
-            ['q'=>'What is the minimum capital required?',
-             'a'=>'There is no hard minimum. However, for effective position sizing and diversification, most traders start with $500–$2,000 depending on their strategy.'],
-            ['q'=>'Can I run multiple strategies simultaneously?',
-             'a'=>'Yes. You can run unlimited strategies across multiple broker accounts, each with independent risk settings and allocation budgets.'],
-        ];
-        @endphp
-        <div class="space-y-3" id="faq-list">
-            @foreach($faqs as $i => $faq)
-            <div class="reveal from-bottom reveal-d{{ ($i % 4) + 1 }} faq-item rounded-2xl overflow-hidden" style="border:1px solid rgba(0,212,255,0.12);">
-                <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left" onclick="toggleFaq(this)">
-                    <span class="font-semibold text-sm sm:text-base" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $faq['q'] }}</span>
-                    <i data-lucide="plus" class="faq-icon flex-shrink-0" style="width:18px;height:18px;color:#00D4FF;transition:transform 0.3s ease;"></i>
-                </button>
-                <div class="faq-answer overflow-hidden" style="max-height:0;transition:max-height 0.45s cubic-bezier(0.23,1,0.32,1);">
-                    <p class="px-5 pb-5 text-sm leading-relaxed" style="color:rgba(226,232,240,0.6);">{{ $faq['a'] }}</p>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- ===================== CTA BANNER ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20">
-    <div class="max-w-4xl mx-auto reveal from-scale">
-        <div class="cta-card p-10 sm:p-14 text-center">
-            <div class="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
-                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.12) 0%,transparent 65%);"></div>
-            </div>
-            <!-- Decorative lines -->
-            <div class="absolute top-6 left-6 right-6 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
-            <div class="absolute bottom-6 left-6 right-6 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
-
-            <div class="relative">
-                <div class="section-tag justify-center mb-3">Limited Offer</div>
-                <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);color:#E2E8F0;">
-                    Ready to Trade on <span class="gradient-shimmer">Autopilot?</span>
-                </h2>
-                <p class="mb-8 max-w-xl mx-auto" style="font-size:0.95rem;color:rgba(226,232,240,0.6);">Join thousands of traders automating their strategies. Start your free 14-day trial — no credit card required.</p>
-                <div class="flex flex-wrap gap-3 justify-center">
-                    <a href="{{ route('signup') }}" class="btn-primary">
-                        <i data-lucide="rocket" style="width:16px;height:16px;"></i>
-                        <span>Start Free Trial</span>
-                    </a>
-                    <a href="{{ route('help') }}" class="btn-outline">
-                        <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
-                        <span>Talk to Sales</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 @endsection
 
 @push('overlays')
 <div id="feature-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div id="modal-backdrop" onclick="closeFeatureModal()"></div>
     <div id="modal-content">
-        <button class="close-modal" aria-label="Close modal" onclick="closeFeatureModal()">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
         <div class="feat-icon mb-6 scale-125 origin-left">
             <i id="modal-icon" data-lucide="cpu" style="width:22px;height:22px;color:#00D4FF;"></i>
         </div>
@@ -784,12 +741,8 @@
         <p id="modal-desc" class="text-lg leading-relaxed mb-8" style="color:rgba(226,232,240,0.7);"></p>
 
         <div class="flex flex-wrap gap-4 pt-4 border-t border-white/5">
-            <a href="{{ route('signup') }}" class="btn-primary py-3 px-8 text-sm">
-                <span>Try this now</span>
-                <i data-lucide="zap" class="w-4 h-4"></i>
-            </a>
-            <button onclick="closeFeatureModal()" class="text-xs font-bold uppercase tracking-[0.2em] px-4 opacity-50 hover:opacity-100 transition-opacity">
-                Close
+            <button onclick="closeFeatureModal()" class="btn-primary py-3 px-8 text-sm w-full justify-center">
+                <span>Close</span>
             </button>
         </div>
     </div>
@@ -858,9 +811,9 @@
 
 
 
-/* ── SCROLL REVEAL + 3D TILT ── */
+/* â”€â”€ SCROLL REVEAL + 3D TILT â”€â”€ */
 (function() {
-    /* ── INTERSECTION OBSERVER for .reveal ── */
+    /* â”€â”€ INTERSECTION OBSERVER for .reveal â”€â”€ */
     const revealEls = document.querySelectorAll('.reveal');
     const obs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
@@ -872,7 +825,7 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
     revealEls.forEach(el => obs.observe(el));
 
-    /* ── 3D CARD TILT ── */
+    /* â”€â”€ 3D CARD TILT â”€â”€ */
     document.querySelectorAll('.tilt-3d').forEach(card => {
         card.addEventListener('mousemove', e => {
             const rect = card.getBoundingClientRect();
@@ -889,7 +842,7 @@
         });
     });
 
-    /* ── FEATURE MODAL LOGIC ── */
+    /* â”€â”€ FEATURE MODAL LOGIC â”€â”€ */
     const features = @json($features);
     const modal = document.getElementById('feature-modal');
     const modalTitle = document.getElementById('modal-title');
@@ -914,7 +867,7 @@
         document.body.style.overflow = '';
     };
 
-    /* ── REVIEW MODAL LOGIC ── */
+    /* â”€â”€ REVIEW MODAL LOGIC â”€â”€ */
     const reviewModal = document.getElementById('review-modal');
     const reviewContent = document.getElementById('review-content');
     const reviewBackdrop = document.getElementById('review-backdrop');
@@ -1085,7 +1038,7 @@
         }
     });
 
-    /* ── FAQ ACCORDION ── */
+    /* â”€â”€ FAQ ACCORDION â”€â”€ */
     window.toggleFaq = function(btn) {
         const item   = btn.closest('.faq-item');
         const answer = item.querySelector('.faq-answer');
@@ -1118,4 +1071,6 @@
 })();
 </script>
 @endpush
+
+
 
