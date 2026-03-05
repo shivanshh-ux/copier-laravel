@@ -2,7 +2,7 @@
 
 @push('styles')
 <style>
-    /* â”€â”€ THEME VARIABLES â”€â”€ */
+    /* ── THEME VARIABLES ── */
     :root {
         --cyan: #00D4FF;
         --blue: #1E5FAD;
@@ -12,8 +12,11 @@
         --border: rgba(0,212,255,0.18);
     }
 
+    /* ── GLOBAL OVERFLOW FIX ── */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    *, *::before, *::after { box-sizing: border-box; }
 
-    /* â”€â”€ GRID OVERLAY â”€â”€ */
+    /* ── GRID OVERLAY ── */
     .grid-bg {
         background-image:
             linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
@@ -21,32 +24,24 @@
         background-size: 60px 60px;
     }
 
-    /* â”€â”€ ANIMATIONS â”€â”€ */
-    @keyframes fadeUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-    @keyframes shimmer { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
-    @keyframes float { 0%,100% { transform:translateY(0) rotateZ(0deg); } 50% { transform:translateY(-14px) rotateZ(1deg); } }
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+    @keyframes shimmer  { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
+    @keyframes float    { 0%,100% { transform:translateY(0) rotateZ(0deg); } 50% { transform:translateY(-14px) rotateZ(1deg); } }
     @keyframes pulseGlow { 0%,100% { box-shadow:0 0 25px rgba(0,212,255,0.3); } 50% { box-shadow:0 0 70px rgba(0,212,255,0.65),0 0 120px rgba(0,212,255,0.2); } }
-    @keyframes borderFlow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
+    @keyframes borderFlow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
     @keyframes scanDown { 0% { top:-3px; } 100% { top:100%; } }
-    @keyframes ticker { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
-    @keyframes countUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes rotateSlow { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
     @keyframes orbPulse { 0%,100% { opacity:0.18; transform:scale(1); } 50% { opacity:0.35; transform:scale(1.08); } }
 
     .anim-fade-up   { animation: fadeUp 0.8s ease forwards; }
     .anim-fade-up-2 { animation: fadeUp 0.8s 0.15s ease forwards; opacity:0; }
     .anim-fade-up-3 { animation: fadeUp 0.8s 0.30s ease forwards; opacity:0; }
     .anim-fade-up-4 { animation: fadeUp 0.8s 0.45s ease forwards; opacity:0; }
-    .anim-fade-in   { animation: fadeIn 1s 0.5s ease forwards; opacity:0; }
     .anim-float     { animation: float 5s ease-in-out infinite; }
     .pulse-glow     { animation: pulseGlow 3s ease-in-out infinite; }
 
-    /* â”€â”€ GRADIENT TEXT â”€â”€ */
+    /* ── GRADIENT TEXT ── */
     .gradient-text {
         background: linear-gradient(90deg, #fff 0%, #00D4FF 55%, #1E5FAD 100%);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -58,7 +53,7 @@
         animation: shimmer 4s linear infinite;
     }
 
-    /* â”€â”€ SCROLL REVEAL â”€â”€ */
+    /* ── SCROLL REVEAL ── */
     .reveal {
         opacity: 0;
         transition: opacity 0.85s cubic-bezier(0.23,1,0.32,1),
@@ -69,7 +64,6 @@
     .reveal.from-right  { transform: translateX(70px); }
     .reveal.from-bottom { transform: translateY(55px); }
     .reveal.from-scale  { transform: scale(0.82); }
-    .reveal.from-rotate { transform: rotateY(25deg) translateX(-30px); }
     .reveal.visible     { opacity:1 !important; transform:none !important; }
     .reveal-d1 { transition-delay: 0.08s; }
     .reveal-d2 { transition-delay: 0.16s; }
@@ -78,11 +72,9 @@
     .reveal-d5 { transition-delay: 0.40s; }
     .reveal-d6 { transition-delay: 0.48s; }
 
-    /* â”€â”€ CARDS â”€â”€ */
+    /* ── CARDS ── */
     .card {
-        transition: transform 0.4s cubic-bezier(0.23,1,0.32,1),
-                    box-shadow 0.4s ease,
-                    border-color 0.4s ease;
+        transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s ease, border-color 0.4s ease;
         position: relative;
         transform-style: preserve-3d;
         background: var(--card-bg);
@@ -91,66 +83,50 @@
     }
     .card::before {
         content: '';
-        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-        border-radius: inherit;
+        position: absolute; inset: 0; border-radius: inherit;
         background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,212,255,0.07) 0%, transparent 60%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
+        opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
     }
     .card:hover::before { opacity: 1; }
-    .card::after {
-        content: '';
-        position: absolute; left: 0; width: 100%; height: 2px;
-        background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-        top: -2px; opacity: 0;
-        transition: top 0.1s linear;
-        pointer-events: none;
-        z-index: 10;
+    @media (min-width: 768px) {
+        .card::after {
+            content: ''; position: absolute; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            top: -2px; opacity: 0; pointer-events: none; z-index: 10;
+        }
+        .card:hover { transform: translateY(-10px) rotateX(3deg); border-color: rgba(0,212,255,0.45) !important; box-shadow: 0 32px 80px rgba(0,212,255,0.18), 0 0 0 1px rgba(0,212,255,0.25); }
+        .card:hover::after { opacity: 1; animation: scanDown 2s linear infinite; }
+        .card:hover .feat-icon { box-shadow: 0 0 24px rgba(0,212,255,0.4); background: linear-gradient(135deg, rgba(30,95,173,0.6), rgba(0,212,255,0.35)); }
     }
-    .card:hover { 
-        transform: translateY(-10px) rotateX(3deg); 
-        border-color: rgba(0,212,255,0.45) !important; 
-        box-shadow: 0 32px 80px rgba(0,212,255,0.18), 0 0 0 1px rgba(0,212,255,0.25); 
-    }
-    .card:hover::after { opacity: 1; animation: scanDown 2s linear infinite; }
 
-    /* â”€â”€ FEAT ICON â”€â”€ */
+    /* ── FEAT ICON ── */
     .feat-icon {
         width: 54px; height: 54px; border-radius: 14px;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         background: linear-gradient(135deg, rgba(30,95,173,0.4), rgba(0,212,255,0.2));
         border: 1px solid rgba(0,212,255,0.25);
         transition: all 0.35s ease;
     }
-    .card:hover .feat-icon { box-shadow: 0 0 24px rgba(0,212,255,0.4); background: linear-gradient(135deg, rgba(30,95,173,0.6), rgba(0,212,255,0.35)); }
 
-    /* â”€â”€ BUTTONS â”€â”€ */
+    /* ── BUTTONS ── */
     .btn-primary {
-        display: inline-flex; align-items: center; gap: 0.5rem;
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
         padding: 0.9rem 2.2rem; border-radius: 0.875rem;
         font-weight: 600; font-size: 0.9rem; letter-spacing: 0.04em;
         text-decoration: none; cursor: pointer; white-space: nowrap;
         background: linear-gradient(135deg, #1E5FAD, #00D4FF);
-        color: #fff; border: none;
-        position: relative; overflow: hidden;
+        color: #fff; border: none; position: relative; overflow: hidden;
         transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), box-shadow 0.3s ease;
     }
-    .btn-primary::before {
-        content: '';
-        position: absolute; inset: 0;
-        background: linear-gradient(135deg, #00D4FF, #1E5FAD);
-        opacity: 0; transition: opacity 0.3s ease;
-    }
+    .btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #00D4FF, #1E5FAD); opacity: 0; transition: opacity 0.3s ease; }
     .btn-primary > * { position: relative; z-index: 1; }
     .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 18px 55px rgba(0,212,255,0.45); }
     .btn-primary:hover::before { opacity: 1; }
 
     .btn-outline {
-        display: inline-flex; align-items: center; gap: 0.5rem;
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
         padding: 0.9rem 2.2rem; border-radius: 0.875rem;
-        font-weight: 500; font-size: 0.9rem; letter-spacing: 0.04em;
+        font-weight: 500; font-size: 0.9rem;
         text-decoration: none; cursor: pointer; white-space: nowrap;
         background: transparent; color: rgba(226,232,240,0.85);
         border: 1px solid rgba(0,212,255,0.3);
@@ -158,92 +134,20 @@
     }
     .btn-outline:hover { background: rgba(0,212,255,0.1); border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.15); }
 
-    /* â”€â”€ MODAL â”€â”€ */
-    #feature-modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        align-items: center;
-        justify-content: center;
-        padding: 1.5rem;
-    }
-    #feature-modal.active { display: flex; }
-    #modal-backdrop {
-        position: absolute;
-        inset: 0;
-        background: rgba(4, 9, 20, 0.85);
-        backdrop-filter: blur(12px);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-    #feature-modal.active #modal-backdrop { opacity: 1; }
-    #modal-content {
-        position: relative;
-        width: 100%;
-        max-width: 600px;
-        background: linear-gradient(135deg, rgba(30,95,173,0.15), rgba(0,212,255,0.05));
-        border: 1px solid rgba(0,212,255,0.2);
-        border-radius: 2rem;
-        padding: 3rem;
-        transform: translateY(30px) scale(0.95);
-        opacity: 0;
-        transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
-        box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.1);
-    }
-    #feature-modal.active #modal-content { transform: translateY(0) scale(1); opacity: 1; }
-    .close-modal {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: #fff;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    .close-modal:hover { background: rgba(0,212,255,0.15); border-color: rgba(0,212,255,0.4); color: #00D4FF; transform: rotate(90deg); }
-
-    @media (max-width: 640px) {
-        #modal-content { padding: 2.5rem 1.5rem; border-radius: 1.5rem; }
-        #modal-content h2 { font-size: 2.2rem !important; }
-        #modal-content .text-lg { font-size: 1.05rem !important; }
-    }
-    @media (max-width: 480px) {
-        #modal-content { padding: 2rem 1.25rem; }
-        #modal-content h2 { font-size: 1.8rem !important; }
-        #modal-content .feat-icon { width: 42px; height: 42px; }
-    }
-
-
-    /* â”€â”€ STAT NUM â”€â”€ */
-    .stat-num { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
-
-    /* â”€â”€ TICKER â”€â”€ */
-    .ticker-wrapper { overflow: hidden; }
-    .ticker-track { display: flex; animation: ticker 30s linear infinite; width: max-content; }
-    .ticker-track:hover { animation-play-state: paused; }
-
-    /* â”€â”€ SECTION HEADING DECO â”€â”€ */
+    /* ── SECTION TAG ── */
     .section-tag {
         display: inline-flex; align-items: center; gap: 0.5rem;
         font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
         color: var(--cyan); margin-bottom: 0.75rem;
     }
     .section-tag::before, .section-tag::after {
-        content: ''; flex: 1; height: 1px;
+        content: ''; height: 1px;
         background: linear-gradient(90deg, transparent, rgba(0,212,255,0.5));
         width: 30px;
     }
     .section-tag::after { background: linear-gradient(270deg, transparent, rgba(0,212,255,0.5)); }
 
-    /* â”€â”€ STEP CIRCLE â”€â”€ */
+    /* ── STEP CIRCLE ── */
     .step-circle {
         width: 64px; height: 64px; border-radius: 20px;
         display: flex; align-items: center; justify-content: center;
@@ -254,91 +158,183 @@
     }
     .step-circle:hover { box-shadow: 0 0 0 12px rgba(0,212,255,0.12), 0 0 60px rgba(0,212,255,0.5); transform: scale(1.08); }
 
-    /* â”€â”€ ORB DECORATION â”€â”€ */
-    .orb {
-        position: absolute; border-radius: 50%;
-        filter: blur(70px); pointer-events: none;
-        animation: orbPulse 6s ease-in-out infinite;
-    }
+    /* ── ORB ── */
+    .orb { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; animation: orbPulse 6s ease-in-out infinite; }
+    /* Hide orbs on mobile to prevent overflow */
+    @media (max-width: 639px) { .orb { display: none; } }
 
-    /* â”€â”€ CTA CARD â”€â”€ */
+    /* ── CTA CARD ── */
     .cta-card {
         background: linear-gradient(135deg, rgba(30,95,173,0.22), rgba(0,212,255,0.08));
-        border: 1px solid rgba(0,212,255,0.2);
-        border-radius: 2rem;
-        position: relative;
-        overflow: hidden;
+        border: 1px solid rgba(0,212,255,0.2); border-radius: 2rem;
+        position: relative; overflow: hidden;
     }
     .cta-card::before {
-        content: '';
-        position: absolute; inset: -2px;
-        border-radius: inherit;
+        content: ''; position: absolute; inset: -2px; border-radius: inherit;
         background: linear-gradient(270deg, #1E5FAD, #00D4FF, #1E5FAD);
-        background-size: 300% 300%;
-        animation: borderFlow 6s linear infinite;
-        z-index: -1;
+        background-size: 300% 300%; animation: borderFlow 6s linear infinite; z-index: -1;
         mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        padding: 2px;
+        -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
     }
 
-    /* â”€â”€ HOVER 3D TILT (JS) â”€â”€ */
+    /* ── STAT NUM ── */
+    .stat-num { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+
+    /* ── TILT ── */
     .tilt-3d { transition: transform 0.15s ease; transform-style: preserve-3d; }
 
-    /* â”€â”€ MOBILE â”€â”€ */
-    @media (max-width: 480px) {
-        .btn-primary, .btn-outline { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
-        .section-tag::before, .section-tag::after { width: 15px; }
+    /* ── MODAL BASE ── */
+    #feature-modal {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        align-items: center; justify-content: center;
+        padding: 1rem;
+    }
+    #feature-modal.active { display: flex; }
+    #modal-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(4,9,20,0.85); backdrop-filter: blur(12px);
+        opacity: 0; transition: opacity 0.4s ease;
+    }
+    #feature-modal.active #modal-backdrop { opacity: 1; }
+    #modal-content {
+        position: relative; width: 100%; max-width: 600px;
+        background: linear-gradient(135deg, rgba(30,95,173,0.15), rgba(0,212,255,0.05));
+        border: 1px solid rgba(0,212,255,0.2); border-radius: 2rem;
+        padding: 2.5rem;
+        transform: translateY(30px) scale(0.95); opacity: 0;
+        transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+        box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.1);
+        max-height: 90vh; overflow-y: auto;
+    }
+    #feature-modal.active #modal-content { transform: translateY(0) scale(1); opacity: 1; }
+
+    .close-modal {
+        position: absolute; top: 1.25rem; right: 1.25rem;
+        width: 40px; height: 40px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+        color: #fff; cursor: pointer; transition: all 0.3s ease; z-index: 10;
+    }
+    .close-modal:hover { background: rgba(0,212,255,0.15); border-color: rgba(0,212,255,0.4); color: #00D4FF; transform: rotate(90deg); }
+
+    /* ── REVIEW MODAL ── */
+    #review-modal {
+        position: fixed; inset: 0; z-index: 9999;
+        align-items: center; justify-content: center;
+        padding: 1rem;
+    }
+    #review-content {
+        max-height: 90vh;
+        overflow-y: auto;
     }
 
-    /* â”€â”€ PAGE TRANSITION OVERLAY â”€â”€ */
+    /* ── COMPARISON TABLE MOBILE SCROLL ── */
+    .comparison-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .comparison-inner { min-width: 480px; }
+
+    /* ── PAGE TRANSITION ── */
     #page-transition {
-        position:fixed; inset:0; z-index:9999;
-        background:linear-gradient(135deg, #020914, #0A1628);
-        transform:scaleY(0); transform-origin:bottom;
-        transition:transform 0.5s cubic-bezier(0.76,0,0.24,1);
-        pointer-events:none;
+        position: fixed; inset: 0; z-index: 9999;
+        background: linear-gradient(135deg, #020914, #0A1628);
+        transform: scaleY(0); transform-origin: bottom;
+        transition: transform 0.5s cubic-bezier(0.76,0,0.24,1);
+        pointer-events: none;
     }
-    #page-transition.entering { transform:scaleY(1); transform-origin:top; }
+    #page-transition.entering { transform: scaleY(1); transform-origin: top; }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE OVERRIDES
+    ══════════════════════════════════════ */
+
+    /* ── MOBILE (< 640px) ── */
+    @media (max-width: 639px) {
+        /* Hero */
+        .hero-section { padding-top: 5rem !important; padding-bottom: 2.5rem !important; }
+
+        /* CTA button row stacks vertically */
+        .hero-ctas { flex-direction: column; align-items: stretch; }
+        .hero-ctas a { width: 100%; justify-content: center; }
+
+        /* Stats: 2-col grid */
+        .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+        .stats-grid .card { padding: 1rem !important; }
+        .stats-grid .feat-icon { width: 40px; height: 40px; margin-bottom: 0.75rem; }
+        .stats-grid .stat-num { font-size: 1.4rem !important; }
+
+        /* Features: single col */
+        .features-grid { grid-template-columns: 1fr !important; }
+
+        /* How it works: single col */
+        .steps-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+        .steps-connector { display: none !important; }
+        .step-item { flex-direction: row; align-items: flex-start; gap: 1rem; text-align: left !important; }
+        .step-item .step-circle { flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; }
+
+        /* Trust strip: 2-col */
+        .trust-grid { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+        .trust-grid > div { padding: 1rem !important; }
+
+        /* CTA banner padding */
+        .cta-card { padding: 2rem 1.25rem !important; }
+
+        /* Testimonials: single col */
+        .reviews-grid { grid-template-columns: 1fr !important; }
+
+        /* Testimonial header stack */
+        .reviews-header { flex-direction: column; align-items: flex-start !important; gap: 0.75rem !important; }
+
+        /* Review modal */
+        #review-content { padding: 1.75rem 1.25rem !important; border-radius: 1.5rem !important; }
+        #review-content h2 { font-size: 1.6rem !important; }
+
+        /* Feature modal */
+        #modal-content { padding: 2rem 1.25rem !important; border-radius: 1.5rem !important; }
+        #modal-content h2 { font-size: 1.8rem !important; }
+
+        /* Buttons */
+        .btn-primary, .btn-outline { padding: 0.75rem 1.4rem; font-size: 0.85rem; }
+
+        /* Section tags shorter lines */
+        .section-tag::before, .section-tag::after { width: 16px; }
+    }
+
+    /* ── TABLET (640px–1023px) ── */
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .steps-connector { display: none !important; }
+        .steps-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; }
+        .features-grid { grid-template-columns: 1fr 1fr !important; }
+        .reviews-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+
+    /* ── Decorative SVG chart — hide below lg ── */
+    .hero-chart-deco { display: none; }
+    @media (min-width: 1024px) { .hero-chart-deco { display: block; } }
 </style>
 @include('customer.partials.preloader_styles')
 @endpush
 
 @section('content')
 
-<!-- ===================== HERO ===================== -->
-<section class="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden" style="padding-top:5rem;padding-bottom:3rem;">
-    <!-- Grid + radial glows -->
+<!-- ══════════ HERO ══════════ -->
+<section class="hero-section relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden" style="padding-top:5.5rem;padding-bottom:3rem;">
     <div class="absolute inset-0 grid-bg opacity-50 pointer-events-none"></div>
     <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 80% 55% at 50% 15%, rgba(30,95,173,0.22) 0%,transparent 70%);"></div>
     <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 50% 40% at 85% 80%, rgba(0,212,255,0.09) 0%,transparent 60%);"></div>
 
-    <!-- Decorative ring -->
+    <!-- Decorative rings — capped so they never cause overflow -->
     <div class="absolute pointer-events-none" style="top:50%;left:50%;transform:translate(-50%,-50%);width:min(700px,90vw);height:min(700px,90vw);border-radius:50%;border:1px solid rgba(0,212,255,0.06);"></div>
-    <div class="absolute pointer-events-none" style="top:50%;left:50%;transform:translate(-50%,-50%);width:min(500px,70vw);height:min(500px,70vw);border-radius:50%;border:1px dashed rgba(0,212,255,0.05);"></div>
+    <div class="absolute pointer-events-none hidden sm:block" style="top:50%;left:50%;transform:translate(-50%,-50%);width:min(500px,70vw);height:min(500px,70vw);border-radius:50%;border:1px dashed rgba(0,212,255,0.05);"></div>
 
-    <!-- Animated chart deco -->
-    <div class="absolute right-[-3%] top-1/2 -translate-y-1/2 w-[42vw] max-w-[480px] pointer-events-none hidden lg:block anim-float" style="opacity:0.055;">
+    <!-- Animated chart deco — desktop only -->
+    <div class="hero-chart-deco absolute right-[-3%] top-1/2 -translate-y-1/2 w-[42vw] max-w-[480px] pointer-events-none anim-float" style="opacity:0.055;">
         <svg viewBox="0 0 520 320" fill="none">
             <polyline points="0,260 90,200 180,225 280,140 360,165 440,75 520,95" stroke="#00D4FF" stroke-width="2.5" fill="none"/>
             <polyline points="0,280 90,250 180,260 280,190 360,215 440,130 520,155" stroke="#1E5FAD" stroke-width="1.5" stroke-dasharray="6,4" fill="none"/>
-            <!-- candles -->
             <rect x="80" y="175" width="10" height="30" fill="rgba(0,212,255,0.4)" rx="1"/>
             <rect x="170" y="200" width="10" height="30" fill="rgba(30,95,173,0.5)" rx="1"/>
             <rect x="270" y="115" width="10" height="30" fill="rgba(0,212,255,0.4)" rx="1"/>
             <rect x="430" y="50" width="10" height="30" fill="rgba(0,212,255,0.6)" rx="1"/>
-        </svg>
-    </div>
-
-    <!-- Left deco -->
-    <div class="absolute left-4 top-1/3 hidden xl:block pointer-events-none" style="opacity:0.04;">
-        <svg width="80" height="300" viewBox="0 0 80 300">
-            <line x1="40" y1="0" x2="40" y2="300" stroke="#00D4FF" stroke-width="1" stroke-dasharray="4,8"/>
-            <circle cx="40" cy="60" r="4" fill="#00D4FF"/>
-            <circle cx="40" cy="140" r="4" fill="#00D4FF"/>
-            <circle cx="40" cy="220" r="4" fill="#00D4FF"/>
         </svg>
     </div>
 
@@ -350,19 +346,19 @@
         </div>
 
         <!-- Headline -->
-        <h1 class="anim-fade-up-2 font-bold leading-tight mb-6" style="font-family:'Rajdhani',sans-serif;font-size:clamp(2.4rem,6.5vw,4.4rem);letter-spacing:-0.01em;">
+        <h1 class="anim-fade-up-2 font-bold leading-tight mb-6" style="font-family:'Rajdhani',sans-serif;font-size:clamp(2rem,6.5vw,4.4rem);letter-spacing:-0.01em;">
             <span class="gradient-shimmer">Automate Your Trades</span><br>
             <span style="color:#E2E8F0;">With Algorithmic</span>
             <span class="gradient-text"> Precision</span>
         </h1>
 
         <!-- Sub -->
-        <p class="anim-fade-up-3 mx-auto mb-10 leading-relaxed max-w-2xl" style="font-size:clamp(0.95rem,2vw,1.15rem);color:rgba(226,232,240,0.65);">
+        <p class="anim-fade-up-3 mx-auto mb-10 leading-relaxed max-w-2xl px-2" style="font-size:clamp(0.9rem,2vw,1.15rem);color:rgba(226,232,240,0.65);">
             Copier connects your strategies to markets 24/7 executing trades with speed, discipline, and zero emotion. Institution-grade tools for every trader.
         </p>
 
         <!-- CTAs -->
-        <div class="anim-fade-up-4 flex flex-wrap gap-3 justify-center">
+        <div class="hero-ctas anim-fade-up-4 flex flex-wrap gap-3 justify-center">
             <a href="{{ route('signup') }}" class="btn-primary pulse-glow">
                 <i data-lucide="zap" style="width:16px;height:16px;"></i>
                 <span>Get Started Free</span>
@@ -375,19 +371,19 @@
     </div>
 </section>
 
-<!-- ===================== STATS ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20">
+<!-- ══════════ STATS ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="stats-grid grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             @php
             $stats=[
-                ['val'=>'$2.4B+','label'=>'Volume Traded','icon'=>'trending-up','delay'=>'reveal-d1'],
-                ['val'=>'12,000+','label'=>'Active Traders','icon'=>'users','delay'=>'reveal-d2'],
-                ['val'=>'99.9%','label'=>'Uptime SLA','icon'=>'shield-check','delay'=>'reveal-d3'],
-                ['val'=>'<50ms','label'=>'Execution Speed','icon'=>'zap','delay'=>'reveal-d4'],
+                ['val'=>'$2.4B+','label'=>'Volume Traded',   'icon'=>'trending-up', 'delay'=>'reveal-d1'],
+                ['val'=>'12,000+','label'=>'Active Traders',  'icon'=>'users',       'delay'=>'reveal-d2'],
+                ['val'=>'99.9%', 'label'=>'Uptime SLA',      'icon'=>'shield-check','delay'=>'reveal-d3'],
+                ['val'=>'<50ms', 'label'=>'Execution Speed', 'icon'=>'zap',         'delay'=>'reveal-d4'],
             ];
             @endphp
-            @foreach($stats as $i=>$s)
+            @foreach($stats as $s)
             <div class="card reveal from-bottom {{ $s['delay'] }} rounded-2xl p-5 sm:p-7 text-center tilt-3d">
                 <div class="feat-icon mx-auto mb-4">
                     <i data-lucide="{{ $s['icon'] }}" style="width:22px;height:22px;color:#00D4FF;"></i>
@@ -400,67 +396,30 @@
     </div>
 </section>
 
-<!-- ===================== FEATURES ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden">
+<!-- ══════════ FEATURES ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20 overflow-hidden">
     <div class="absolute inset-0 grid-bg opacity-35 pointer-events-none"></div>
-    <!-- Orb decorations -->
     <div class="orb" style="width:400px;height:400px;background:rgba(30,95,173,0.25);top:10%;right:-100px;animation-delay:0s;"></div>
     <div class="orb" style="width:300px;height:300px;background:rgba(0,212,255,0.1);bottom:5%;left:-80px;animation-delay:3s;"></div>
 
     <div class="max-w-7xl mx-auto relative">
-        <div class="text-center mb-16 reveal from-bottom">
+        <div class="text-center mb-12 sm:mb-16 reveal from-bottom">
             <div class="section-tag">Why Copier</div>
-            <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+            <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.7rem,4vw,3rem);color:#E2E8F0;">
                 Everything You Need to <span class="gradient-text">Trade Smarter</span>
             </h2>
-            <p class="mx-auto max-w-xl" style="font-size:0.95rem;color:rgba(226,232,240,0.55);">From strategy setup to live execution, Copier handles every step with institutional-grade technology.</p>
+            <p class="mx-auto max-w-xl px-4" style="font-size:0.95rem;color:rgba(226,232,240,0.55);">From strategy setup to live execution, Copier handles every step with institutional-grade technology.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        <div class="features-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             @php
             $features=[
-                [
-                    'icon'=>'cpu',
-                    'title'=>'Smart Algorithms',
-                    'desc'=>'Deploy pre-built or custom strategies. Our engine adapts to market conditions in real time.',
-                    'details'=>'Our proprietary execution engine leverages machine learning to anticipate order book movements and optimize entry/exit points. Whether you\'re using our pre-built library of 50+ strategies or coding your own in Python or C++, the system scales with your needs.',
-                    'dir'=>'from-left'
-                ],
-                [
-                    'icon'=>'shield',
-                    'title'=>'Risk Management',
-                    'desc'=>'Advanced position sizing, stop-loss automation, and drawdown controls to protect your capital.',
-                    'details'=>'Protect your capital with institution-grade risk controls. Set hard stops, trailing stops, and total daily drawdown limits at the account or strategy level. Our system monitors volatility 24/7, automatically pausing execution if predefined risk thresholds are breached.',
-                    'dir'=>'from-bottom'
-                ],
-                [
-                    'icon'=>'bar-chart-2',
-                    'title'=>'Deep Analytics',
-                    'desc'=>'Live P&L dashboards, trade journals, and performance attribution across all your strategies.',
-                    'details'=>'Gain total visibility into your trading performance. Our analytics suite includes real-time P&L attribution, Monte Carlo simulations, and trade journaling. Identify which market conditions favor your strategies and refine your approach with data-driven insights.',
-                    'dir'=>'from-right'
-                ],
-                [
-                    'icon'=>'globe',
-                    'title'=>'Multi-Market Access',
-                    'desc'=>'Trade equities, forex, crypto, and commodities from a single unified account.',
-                    'details'=>'Connect to the world\'s most liquid exchanges through a single unified API. Trade Equities (NYSE, NASDAQ, LSE), Forex (Major & Minor pairs), Crypto (Top 200 assets), and Commodities (Gold, Oil, Natural Gas) from one dashboard.',
-                    'dir'=>'from-left'
-                ],
-                [
-                    'icon'=>'bell',
-                    'title'=>'Smart Alerts',
-                    'desc'=>'Custom push/email/SMS notifications for fills, drawdown thresholds, and market signals.',
-                    'details'=>'Stay informed wherever you are. Configure multi-channel alerts via Push Notifications, SMS, Email, or Slack/Discord webhooks. Get notified about trade fills, margin levels, stop-loss triggers, or unusual market activity in milliseconds.',
-                    'dir'=>'from-bottom'
-                ],
-                [
-                    'icon'=>'lock',
-                    'title'=>'Bank-Grade Security',
-                    'desc'=>'256-bit encryption, 2FA, and SOC 2 certified infrastructure to keep your account safe.',
-                    'details'=>'Your data and assets are protected by industry-leading security protocols. We utilize AES-256 encryption, mandatory 2FA, and cold storage for API keys. Our infrastructure is SOC 2 compliant and undergoes regular third-party penetration testing.',
-                    'dir'=>'from-right'
-                ],
+                ['icon'=>'cpu',        'title'=>'Smart Algorithms',   'desc'=>'Deploy pre-built or custom strategies. Our engine adapts to market conditions in real time.',     'details'=>'Our proprietary execution engine leverages machine learning to anticipate order book movements and optimize entry/exit points. Whether you\'re using our pre-built library of 50+ strategies or coding your own in Python or C++, the system scales with your needs.','dir'=>'from-left'],
+                ['icon'=>'shield',     'title'=>'Risk Management',    'desc'=>'Advanced position sizing, stop-loss automation, and drawdown controls to protect your capital.',  'details'=>'Protect your capital with institution-grade risk controls. Set hard stops, trailing stops, and total daily drawdown limits at the account or strategy level. Our system monitors volatility 24/7, automatically pausing execution if predefined risk thresholds are breached.','dir'=>'from-bottom'],
+                ['icon'=>'bar-chart-2','title'=>'Deep Analytics',     'desc'=>'Live P&L dashboards, trade journals, and performance attribution across all your strategies.',    'details'=>'Gain total visibility into your trading performance. Our analytics suite includes real-time P&L attribution, Monte Carlo simulations, and trade journaling. Identify which market conditions favor your strategies and refine your approach with data-driven insights.','dir'=>'from-right'],
+                ['icon'=>'globe',      'title'=>'Multi-Market Access','desc'=>'Trade equities, forex, crypto, and commodities from a single unified account.',                   'details'=>'Connect to the world\'s most liquid exchanges through a single unified API. Trade Equities (NYSE, NASDAQ, LSE), Forex (Major & Minor pairs), Crypto (Top 200 assets), and Commodities (Gold, Oil, Natural Gas) from one dashboard.','dir'=>'from-left'],
+                ['icon'=>'bell',       'title'=>'Smart Alerts',       'desc'=>'Custom push/email/SMS notifications for fills, drawdown thresholds, and market signals.',          'details'=>'Stay informed wherever you are. Configure multi-channel alerts via Push Notifications, SMS, Email, or Slack/Discord webhooks. Get notified about trade fills, margin levels, stop-loss triggers, or unusual market activity in milliseconds.','dir'=>'from-bottom'],
+                ['icon'=>'lock',       'title'=>'Bank-Grade Security','desc'=>'256-bit encryption, 2FA, and SOC 2 certified infrastructure to keep your account safe.',          'details'=>'Your data and assets are protected by industry-leading security protocols. We utilize AES-256 encryption, mandatory 2FA, and cold storage for API keys. Our infrastructure is SOC 2 compliant and undergoes regular third-party penetration testing.','dir'=>'from-right'],
             ];
             $delays=['reveal-d1','reveal-d2','reveal-d3','reveal-d4','reveal-d5','reveal-d6'];
             @endphp
@@ -469,14 +428,13 @@
                 <div class="feat-icon mb-5">
                     <i data-lucide="{{ $f['icon'] }}" style="width:22px;height:22px;color:#00D4FF;"></i>
                 </div>
-                <h3 class="font-semibold mb-2" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;font-size:1.15rem;letter-spacing:0.02em;">{{ $f['title'] }}</h3>
+                <h3 class="font-semibold mb-2" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;font-size:1.1rem;letter-spacing:0.02em;">{{ $f['title'] }}</h3>
                 <p class="text-sm leading-relaxed mb-6" style="color:rgba(226,232,240,0.55);">{{ $f['desc'] }}</p>
-
                 <button class="mt-auto group flex items-center gap-2 text-xs font-semibold tracking-widest uppercase transition-colors hover:text-cyan-400"
-                        style="color: rgba(0,212,255,0.7);"
+                        style="color:rgba(0,212,255,0.7);"
                         onclick="showFeatureDetails({{ $i }})">
                     Learn More
-                    <i data-lucide="chevron-right" class="w-3 h-3 transition-transform group-hover:translate-x-1"></i>
+                    <i data-lucide="chevron-right" style="width:12px;height:12px;transition:transform 0.2s;"></i>
                 </button>
             </div>
             @endforeach
@@ -484,124 +442,127 @@
     </div>
 </section>
 
-<!-- ===================== COMPARISON ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden" style="background:rgba(6,13,26,0.65);backdrop-filter:blur(2px);">
+<!-- ══════════ COMPARISON ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20 overflow-hidden" style="background:rgba(6,13,26,0.65);backdrop-filter:blur(2px);">
     <div class="orb" style="width:420px;height:420px;background:rgba(0,212,255,0.06);bottom:-80px;right:-100px;"></div>
     <div class="max-w-5xl mx-auto relative">
-        <div class="text-center mb-14 reveal from-bottom">
+        <div class="text-center mb-10 sm:mb-14 reveal from-bottom">
             <div class="section-tag">Why Switch</div>
-            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.7rem,4vw,3rem);color:#E2E8F0;">
                 Copier vs. <span class="gradient-text">The Rest</span>
             </h2>
-            <p class="mt-3 max-w-xl mx-auto text-sm" style="color:rgba(226,232,240,0.50);">See why professional traders are switching to Copier from traditional platforms.</p>
+            <p class="mt-3 max-w-xl mx-auto text-sm px-4" style="color:rgba(226,232,240,0.50);">See why professional traders are switching to Copier from traditional platforms.</p>
         </div>
 
-        <div class="reveal from-bottom" style="border:1px solid rgba(0,212,255,0.15);border-radius:1.5rem;overflow:hidden;backdrop-filter:blur(12px);">
-            <!-- Header row -->
-            <div class="grid grid-cols-3 text-xs font-bold uppercase tracking-widest" style="background:rgba(0,212,255,0.06);border-bottom:1px solid rgba(0,212,255,0.12);">
-                <div class="p-4 sm:p-5" style="color:rgba(226,232,240,0.4);">Feature</div>
-                <div class="p-4 sm:p-5 text-center" style="color:#00D4FF;">Copier</div>
-                <div class="p-4 sm:p-5 text-center" style="color:rgba(226,232,240,0.35);">Traditional Platforms</div>
-            </div>
-            @php
-            $comparisons = [
-                ['feat'=>'Execution Speed',       'us'=>'< 50ms average',      'them'=>'200ms â€“ 2s'],
-                ['feat'=>'Strategy Automation',   'us'=>'Full (Python, C++)',   'them'=>'Limited / Manual'],
-                ['feat'=>'Risk Controls',         'us'=>'Granular & Real-time', 'them'=>'Basic stop-loss only'],
-                ['feat'=>'Portfolio Analytics',   'us'=>'Monte Carlo + AI',     'them'=>'Basic P&L charts'],
-                ['feat'=>'Multi-Asset Support',   'us'=>'Stocks, Forex, Crypto','them'=>'Single asset class'],
-                ['feat'=>'24/7 Market Coverage',  'us'=>'Fully automated',      'them'=>'Manual monitoring'],
-                ['feat'=>'Fee Structure',         'us'=>'Performance-based',    'them'=>'Fixed + hidden fees'],
-            ];
-            @endphp
-            @foreach($comparisons as $i => $c)
-            <div class="grid grid-cols-3" style="border-bottom:1px solid rgba(0,212,255,{{ $i < count($comparisons)-1 ? '0.08' : '0' }});">
-                <div class="p-4 sm:p-5 text-sm font-medium" style="color:rgba(226,232,240,0.65);">{{ $c['feat'] }}</div>
-                <div class="p-4 sm:p-5 text-center text-sm flex items-center justify-center gap-2 font-semibold" style="color:#E2E8F0;">
-                    <i data-lucide="check-circle-2" style="width:15px;height:15px;color:#00D4FF;flex-shrink:0;"></i>
-                    {{ $c['us'] }}
+        <div class="reveal from-bottom comparison-scroll" style="border:1px solid rgba(0,212,255,0.15);border-radius:1.5rem;backdrop-filter:blur(12px);">
+            <div class="comparison-inner">
+                <!-- Header row -->
+                <div class="grid grid-cols-3 text-xs font-bold uppercase tracking-widest" style="background:rgba(0,212,255,0.06);border-bottom:1px solid rgba(0,212,255,0.12);">
+                    <div class="p-3 sm:p-5" style="color:rgba(226,232,240,0.4);">Feature</div>
+                    <div class="p-3 sm:p-5 text-center" style="color:#00D4FF;">Copier</div>
+                    <div class="p-3 sm:p-5 text-center" style="color:rgba(226,232,240,0.35);">Traditional</div>
                 </div>
-                <div class="p-4 sm:p-5 text-center text-sm" style="color:rgba(226,232,240,0.35);">{{ $c['them'] }}</div>
+                @php
+                $comparisons = [
+                    ['feat'=>'Execution Speed',      'us'=>'< 50ms',              'them'=>'200ms – 2s'],
+                    ['feat'=>'Strategy Automation',  'us'=>'Full (Python, C++)',  'them'=>'Limited / Manual'],
+                    ['feat'=>'Risk Controls',        'us'=>'Granular & Real-time','them'=>'Basic stop-loss'],
+                    ['feat'=>'Portfolio Analytics',  'us'=>'Monte Carlo + AI',    'them'=>'Basic P&L charts'],
+                    ['feat'=>'Multi-Asset Support',  'us'=>'Stocks, Forex, Crypto','them'=>'Single asset class'],
+                    ['feat'=>'24/7 Coverage',        'us'=>'Fully automated',     'them'=>'Manual monitoring'],
+                    ['feat'=>'Fee Structure',        'us'=>'Performance-based',   'them'=>'Fixed + hidden fees'],
+                ];
+                @endphp
+                @foreach($comparisons as $i => $c)
+                <div class="grid grid-cols-3" style="border-bottom:1px solid rgba(0,212,255,{{ $i < count($comparisons)-1 ? '0.08' : '0' }});">
+                    <div class="p-3 sm:p-5 text-xs sm:text-sm font-medium" style="color:rgba(226,232,240,0.65);">{{ $c['feat'] }}</div>
+                    <div class="p-3 sm:p-5 text-center text-xs sm:text-sm flex items-center justify-center gap-1 sm:gap-2 font-semibold" style="color:#E2E8F0;">
+                        <i data-lucide="check-circle-2" style="width:13px;height:13px;color:#00D4FF;flex-shrink:0;"></i>
+                        <span>{{ $c['us'] }}</span>
+                    </div>
+                    <div class="p-3 sm:p-5 text-center text-xs sm:text-sm" style="color:rgba(226,232,240,0.35);">{{ $c['them'] }}</div>
+                </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
+        <p class="text-center text-xs mt-3 sm:hidden" style="color:rgba(0,212,255,0.4);">← Scroll if needed →</p>
     </div>
 </section>
 
-<!-- ===================== HOW IT WORKS ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20">
+<!-- ══════════ HOW IT WORKS ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-16 reveal from-bottom">
+        <div class="text-center mb-12 sm:mb-16 reveal from-bottom">
             <div class="section-tag">Simple Process</div>
-            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+            <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.7rem,4vw,3rem);color:#E2E8F0;">
                 Up and Running in <span class="gradient-text">4 Steps</span>
             </h2>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-10 sm:gap-6 relative">
-            <!-- Connector line -->
-            <div class="hidden sm:block absolute top-8 left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-px" style="background:linear-gradient(90deg,rgba(0,212,255,0.4),rgba(0,212,255,0.7),rgba(0,212,255,0.4));top:32px;"></div>
+        <div class="steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 relative">
+            <!-- Connector line desktop only -->
+            <div class="steps-connector hidden lg:block absolute h-px" style="background:linear-gradient(90deg,rgba(0,212,255,0.4),rgba(0,212,255,0.7),rgba(0,212,255,0.4));top:32px;left:calc(12.5% + 32px);right:calc(12.5% + 32px);"></div>
 
             @php
             $steps = [
-                ['n'=>'01','icon'=>'user-plus','title'=>'Create Account','desc'=>'Sign up in under 2 minutes. No credit card needed for your free trial.','dir'=>'from-left'],
-                ['n'=>'02','icon'=>'credit-card','title'=>'Pick a Plan','desc'=>'Choose a plan that fits your trading volume and needs.','dir'=>'from-bottom'],
-                ['n'=>'03','icon'=>'sliders','title'=>'Configure Strategy','desc'=>'Choose from our strategy library or upload your own algorithm.','dir'=>'from-bottom'],
-                ['n'=>'04','icon'=>'play','title'=>'Go Live','desc'=>'Connect your broker, review risk settings, and activate your strategy.','dir'=>'from-right'],
+                ['n'=>'01','icon'=>'user-plus',   'title'=>'Create Account',    'desc'=>'Sign up in under 2 minutes. No credit card needed for your free trial.',      'dir'=>'from-left'],
+                ['n'=>'02','icon'=>'credit-card', 'title'=>'Pick a Plan',       'desc'=>'Choose a plan that fits your trading volume and needs.',                       'dir'=>'from-bottom'],
+                ['n'=>'03','icon'=>'sliders',     'title'=>'Configure Strategy','desc'=>'Choose from our strategy library or upload your own algorithm.',               'dir'=>'from-bottom'],
+                ['n'=>'04','icon'=>'play',        'title'=>'Go Live',           'desc'=>'Connect your broker, review risk settings, and activate your strategy.',       'dir'=>'from-right'],
             ];
             @endphp
             @foreach($steps as $i=>$s)
-            <div class="reveal {{ $s['dir'].' reveal-d'.($i+1) }} flex flex-col items-center text-center">
-                <div class="step-circle mb-5">
-                    <i data-lucide="{{ $s['icon'] }}" style="width:26px;height:26px;color:#fff;stroke-width:2;"></i>
+            <div class="step-item reveal {{ $s['dir'].' reveal-d'.($i+1) }} flex lg:flex-col items-center lg:items-center text-left lg:text-center gap-4 lg:gap-0">
+                <div class="step-circle mb-0 lg:mb-5 flex-shrink-0">
+                    <i data-lucide="{{ $s['icon'] }}" style="width:24px;height:24px;color:#fff;stroke-width:2;"></i>
                 </div>
-                <span class="text-xs font-bold tracking-widest mb-2" style="color:rgba(0,212,255,0.45);">{{ $s['n'] }}</span>
-                <h3 class="font-semibold text-lg mb-2" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $s['title'] }}</h3>
-                <p class="text-sm max-w-xs" style="color:rgba(226,232,240,0.55);">{{ $s['desc'] }}</p>
+                <div>
+                    <span class="text-xs font-bold tracking-widest mb-1 block" style="color:rgba(0,212,255,0.45);">{{ $s['n'] }}</span>
+                    <h3 class="font-semibold text-base sm:text-lg mb-1 sm:mb-2" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $s['title'] }}</h3>
+                    <p class="text-sm" style="color:rgba(226,232,240,0.55);">{{ $s['desc'] }}</p>
+                </div>
             </div>
             @endforeach
         </div>
     </div>
 </section>
 
-<!-- ===================== LEARNING RESOURCES (MEDIA) ===================== -->
+<!-- ══════════ LEARNING RESOURCES ══════════ -->
 @if($media->count() > 0)
-<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden">
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20 overflow-hidden">
     <div class="absolute inset-0 grid-bg opacity-30 pointer-events-none"></div>
     <div class="orb" style="width:400px;height:400px;background:rgba(0,212,255,0.06);top:20%;left:-100px;animation-delay:1s;"></div>
-    
+
     <div class="max-w-7xl mx-auto relative">
-        <div class="text-center mb-16 reveal from-bottom">
+        <div class="text-center mb-12 sm:mb-16 reveal from-bottom">
             <div class="section-tag">Resources</div>
-            <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+            <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.7rem,4vw,3rem);color:#E2E8F0;">
                 Learning <span class="gradient-text">Center</span>
             </h2>
-            <p class="mx-auto max-w-xl" style="font-size:0.95rem;color:rgba(226,232,240,0.55);">Access our exclusive guides and video tutorials to master the art of algorithmic trading.</p>
+            <p class="mx-auto max-w-xl px-4" style="font-size:0.95rem;color:rgba(226,232,240,0.55);">Access our exclusive guides and video tutorials to master the art of algorithmic trading.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
             @foreach($media as $i => $item)
             <div class="card reveal from-bottom reveal-d{{ ($i % 4) + 1 }} rounded-2xl p-6 tilt-3d flex flex-col">
                 <div class="flex items-start justify-between mb-6">
                     <div class="feat-icon">
                         <i data-lucide="{{ $item->type == 'video' ? 'play-circle' : 'file-text' }}" style="width:24px;height:24px;color:#00D4FF;"></i>
                     </div>
-                    <span class="text-[0.65rem] font-bold tracking-widest uppercase px-3 py-1 rounded-full" style="background:rgba(0,212,255,0.1); color:#00D4FF; border:1px solid rgba(0,212,255,0.15);">
+                    <span class="text-[0.65rem] font-bold tracking-widest uppercase px-3 py-1 rounded-full flex-shrink-0" style="background:rgba(0,212,255,0.1); color:#00D4FF; border:1px solid rgba(0,212,255,0.15);">
                         {{ strtoupper($item->type) }}
                     </span>
                 </div>
-
-                <h3 class="font-semibold mb-3" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;font-size:1.2rem;letter-spacing:0.02em;">{{ $item->title }}</h3>
+                <h3 class="font-semibold mb-3" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;font-size:1.1rem;">{{ $item->title }}</h3>
                 <p class="text-sm leading-relaxed mb-8 flex-1" style="color:rgba(226,232,240,0.5);">{{ $item->description }}</p>
-
-                <div class="pt-6 border-t border-white/5">
+                <div class="pt-5 border-t border-white/5">
                     @if($item->type == 'video')
-                        <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="btn-primary w-full justify-center py-3 text-xs">
+                        <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="btn-primary w-full py-3 text-xs">
                             <i data-lucide="play" style="width:14px;height:14px;"></i>
                             <span>Watch Tutorial</span>
                         </a>
                     @else
-                        <a href="{{ asset('storage/' . $item->file_path) }}" download="{{ $item->original_name }}" class="btn-outline w-full justify-center py-3 text-xs">
+                        <a href="{{ asset('storage/' . $item->file_path) }}" download="{{ $item->original_name }}" class="btn-outline w-full py-3 text-xs">
                             <i data-lucide="download" style="width:14px;height:14px;"></i>
                             <span>Download Guide</span>
                         </a>
@@ -614,49 +575,48 @@
 </section>
 @endif
 
-<!-- ===================== TRUST STRIP ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-16">
+<!-- ══════════ TRUST STRIP ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
     <div class="max-w-5xl mx-auto">
-        <p class="text-center text-xs font-bold uppercase tracking-[0.3em] mb-10 reveal from-bottom" style="color:rgba(226,232,240,0.3);">Powered By Industry-Leading Technology</p>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <p class="text-center text-xs font-bold uppercase tracking-[0.3em] mb-8 sm:mb-10 reveal from-bottom" style="color:rgba(226,232,240,0.3);">Powered By Industry-Leading Technology</p>
+        <div class="trust-grid grid grid-cols-2 sm:grid-cols-4 gap-4">
             @php
             $tech = [
-                ['icon'=>'zap',      'name'=>'Ultra-Low Latency','sub'=>'Sub-50ms execution engine'],
-                ['icon'=>'shield',   'name'=>'SOC 2 Certified',  'sub'=>'Enterprise security audit'],
-                ['icon'=>'server',   'name'=>'99.9% Uptime',     'sub'=>'Redundant global infrastructure'],
-                ['icon'=>'trending-up','name'=>'AI-Powered',     'sub'=>'Real-time adaptive algorithms'],
+                ['icon'=>'zap',         'name'=>'Ultra-Low Latency','sub'=>'Sub-50ms execution engine'],
+                ['icon'=>'shield',      'name'=>'SOC 2 Certified',  'sub'=>'Enterprise security audit'],
+                ['icon'=>'server',      'name'=>'99.9% Uptime',     'sub'=>'Redundant global infra'],
+                ['icon'=>'trending-up', 'name'=>'AI-Powered',       'sub'=>'Real-time adaptive algos'],
             ];
             @endphp
             @foreach($tech as $i => $t)
-            <div class="reveal from-bottom reveal-d{{ $i+1 }} text-center p-5 rounded-2xl" style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);">
-                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3" style="background:linear-gradient(135deg,rgba(30,95,173,0.4),rgba(0,212,255,0.2));border:1px solid rgba(0,212,255,0.2);">
-                    <i data-lucide="{{ $t['icon'] }}" style="width:20px;height:20px;color:#00D4FF;"></i>
+            <div class="reveal from-bottom reveal-d{{ $i+1 }} text-center p-4 sm:p-5 rounded-2xl" style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);">
+                <div class="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl mb-3" style="background:linear-gradient(135deg,rgba(30,95,173,0.4),rgba(0,212,255,0.2));border:1px solid rgba(0,212,255,0.2);">
+                    <i data-lucide="{{ $t['icon'] }}" style="width:18px;height:18px;color:#00D4FF;"></i>
                 </div>
-                <p class="font-bold text-sm mb-1" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $t['name'] }}</p>
-                <p class="text-xs" style="color:rgba(226,232,240,0.4);">{{ $t['sub'] }}</p>
+                <p class="font-bold text-xs sm:text-sm mb-1" style="color:#E2E8F0;font-family:'Rajdhani',sans-serif;">{{ $t['name'] }}</p>
+                <p class="text-xs leading-tight" style="color:rgba(226,232,240,0.4);">{{ $t['sub'] }}</p>
             </div>
             @endforeach
         </div>
     </div>
 </section>
 
-<!-- ===================== CTA BANNER ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20">
+<!-- ══════════ CTA BANNER ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-4xl mx-auto reveal from-scale">
-        <div class="cta-card p-10 sm:p-14 text-center">
+        <div class="cta-card p-8 sm:p-12 lg:p-14 text-center">
             <div class="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
                 <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.12) 0%,transparent 65%);"></div>
             </div>
-            <!-- Decorative lines -->
-            <div class="absolute top-6 left-6 right-6 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
-            <div class="absolute bottom-6 left-6 right-6 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
+            <div class="absolute top-5 left-5 right-5 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
+            <div class="absolute bottom-5 left-5 right-5 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);"></div>
 
             <div class="relative">
                 <div class="section-tag justify-center mb-3">Limited Offer</div>
-                <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);color:#E2E8F0;">
+                <h2 class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);color:#E2E8F0;">
                     Ready to Trade on <span class="gradient-shimmer">Autopilot?</span>
                 </h2>
-                <p class="mb-8 max-w-xl mx-auto" style="font-size:0.95rem;color:rgba(226,232,240,0.6);">Join thousands of traders automating their strategies. Start your free 14-day trial â€” no credit card required.</p>
+                <p class="mb-8 max-w-xl mx-auto px-2" style="font-size:0.95rem;color:rgba(226,232,240,0.6);">Join thousands of traders automating their strategies. Start your free 14-day trial — no credit card required.</p>
                 <div class="flex flex-wrap gap-3 justify-center">
                     <a href="{{ route('signup') }}" class="btn-primary">
                         <i data-lucide="rocket" style="width:16px;height:16px;"></i>
@@ -672,36 +632,35 @@
     </div>
 </section>
 
-<!-- ===================== TESTIMONIALS ===================== -->
-<section class="relative px-4 sm:px-6 lg:px-8 py-20 overflow-hidden">
+<!-- ══════════ TESTIMONIALS ══════════ -->
+<section class="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20 overflow-hidden">
     <div class="absolute inset-0 grid-bg opacity-25 pointer-events-none"></div>
     <div class="orb" style="width:350px;height:350px;background:rgba(0,212,255,0.08);top:20%;left:10%;animation-delay:2s;"></div>
 
     <div class="max-w-7xl mx-auto relative">
-        <div class="flex flex-col sm:flex-row items-center justify-between mb-14 reveal from-bottom">
-            <div class="text-center sm:text-left mb-6 sm:mb-0">
+        <div class="reviews-header flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-14 gap-4 reveal from-bottom">
+            <div>
                 <div class="section-tag">Testimonials</div>
-                <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.9rem,4vw,3rem);color:#E2E8F0;">
+                <h2 class="font-bold" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.7rem,4vw,3rem);color:#E2E8F0;">
                     Traders <span class="gradient-text">Love Copier</span>
                 </h2>
             </div>
-            <button onclick="openReviewModal()" class="btn-outline py-2.5 px-6 text-sm">
-                <i data-lucide="edit-3" class="w-4 h-4"></i>
+            <button onclick="openReviewModal()" class="btn-outline py-2.5 px-5 text-sm flex-shrink-0">
+                <i data-lucide="edit-3" style="width:16px;height:16px;"></i>
                 <span>Write a Review</span>
             </button>
         </div>
 
-        <div id="reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        <div id="reviews-grid" class="reviews-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             @foreach($reviews as $i => $t)
             @php
-                $delays = ['reveal-d1', 'reveal-d2', 'reveal-d3', 'reveal-d4', 'reveal-d5', 'reveal-d6'];
-                $dir = $i % 3 == 0 ? 'from-left' : ($i % 3 == 1 ? 'from-bottom' : 'from-right');
-                $delay = $delays[$i % 6];
+                $dirs = ['from-left','from-bottom','from-right'];
+                $delays2 = ['reveal-d1','reveal-d2','reveal-d3','reveal-d4','reveal-d5','reveal-d6'];
+                $dir = $dirs[$i % 3];
+                $delay = $delays2[$i % 6];
             @endphp
             <div class="card reveal {{ $dir }} {{ $delay }} rounded-2xl p-6 tilt-3d">
-                <!-- Quote icon -->
-                <div style="font-size:3rem;line-height:1;color:rgba(0,212,255,0.15);font-family:serif;margin-bottom:0.5rem;">"</div>
-                <!-- Stars -->
+                <div style="font-size:2.5rem;line-height:1;color:rgba(0,212,255,0.15);font-family:serif;margin-bottom:0.4rem;">"</div>
                 <div class="flex gap-1 mb-4">
                     @for($s=0; $s<5; $s++)
                     <i data-lucide="star" style="width:13px;height:13px;color:{{ $s < $t->rating ? '#FBBF24' : 'rgba(255,255,255,0.1)' }};fill:{{ $s < $t->rating ? '#FBBF24' : 'transparent' }};"></i>
@@ -716,9 +675,9 @@
                             {{ $t->name[0] }}
                         @endif
                     </div>
-                    <div>
-                        <p class="text-sm font-semibold" style="color:#E2E8F0;">{{ $t->name }}</p>
-                        <p class="text-xs" style="color:#00D4FF;opacity:0.7;">{{ $t->role }}</p>
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold truncate" style="color:#E2E8F0;">{{ $t->name }}</p>
+                        <p class="text-xs truncate" style="color:#00D4FF;opacity:0.7;">{{ $t->role }}</p>
                     </div>
                 </div>
             </div>
@@ -730,17 +689,20 @@
 @endsection
 
 @push('overlays')
+{{-- Feature Modal --}}
 <div id="feature-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div id="modal-backdrop" onclick="closeFeatureModal()"></div>
     <div id="modal-content">
-        <div class="feat-icon mb-6 scale-125 origin-left">
+        <button class="close-modal" onclick="closeFeatureModal()">
+            <i data-lucide="x" style="width:18px;height:18px;"></i>
+        </button>
+        <div class="feat-icon mb-5" style="transform:scale(1.1);transform-origin:left;">
             <i id="modal-icon" data-lucide="cpu" style="width:22px;height:22px;color:#00D4FF;"></i>
         </div>
-        <h2 id="modal-title" class="text-3xl font-bold mb-4" style="font-family:'Rajdhani',sans-serif; color:#fff;"></h2>
-        <div class="h-1 w-20 rounded-full mb-8" style="background: linear-gradient(90deg, #1E5FAD, #00D4FF);"></div>
-        <p id="modal-desc" class="text-lg leading-relaxed mb-8" style="color:rgba(226,232,240,0.7);"></p>
-
-        <div class="flex flex-wrap gap-4 pt-4 border-t border-white/5">
+        <h2 id="modal-title" class="font-bold mb-4" style="font-family:'Rajdhani',sans-serif;font-size:clamp(1.6rem,4vw,2rem);color:#fff;"></h2>
+        <div class="h-1 w-16 rounded-full mb-6" style="background:linear-gradient(90deg,#1E5FAD,#00D4FF);"></div>
+        <p id="modal-desc" class="leading-relaxed mb-6" style="font-size:clamp(0.9rem,2vw,1.05rem);color:rgba(226,232,240,0.7);"></p>
+        <div class="pt-4 border-t border-white/5">
             <button onclick="closeFeatureModal()" class="btn-primary py-3 px-8 text-sm w-full justify-center">
                 <span>Close</span>
             </button>
@@ -748,37 +710,37 @@
     </div>
 </div>
 
-{{-- Review Submission Modal --}}
-<div id="review-modal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; padding:1.5rem;">
-    <div id="review-backdrop" style="position:absolute; inset:0; background:rgba(4, 9, 20, 0.85); backdrop-filter:blur(12px); opacity:0; transition:opacity 0.4s ease;" onclick="closeReviewModal()"></div>
-    <div id="review-content" style="position:relative; width:100%; max-width:550px; background:linear-gradient(135deg, rgba(30,95,173,0.15), rgba(0,212,255,0.05)); border:1px solid rgba(0,212,255,0.2); border-radius:2rem; padding:2.5rem; transform:translateY(30px) scale(0.95); opacity:0; transition:all 0.4s cubic-bezier(0.23,1,0.32,1); box-shadow:0 40px 100px rgba(0,0,0,0.5);">
-        <button class="close-modal" onclick="closeReviewModal()" style="position:absolute; top:1.5rem; right:1.5rem; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; cursor:pointer;">
-            <i data-lucide="x" class="w-5 h-5"></i>
+{{-- Review Modal --}}
+<div id="review-modal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; padding:1rem;">
+    <div id="review-backdrop" style="position:absolute; inset:0; background:rgba(4,9,20,0.85); backdrop-filter:blur(12px); opacity:0; transition:opacity 0.4s ease;" onclick="closeReviewModal()"></div>
+    <div id="review-content" style="position:relative; width:100%; max-width:540px; background:linear-gradient(135deg,rgba(30,95,173,0.15),rgba(0,212,255,0.05)); border:1px solid rgba(0,212,255,0.2); border-radius:1.75rem; padding:2.25rem 2rem; transform:translateY(30px) scale(0.95); opacity:0; transition:all 0.4s cubic-bezier(0.23,1,0.32,1); box-shadow:0 40px 100px rgba(0,0,0,0.5); max-height:90vh; overflow-y:auto;">
+        <button class="close-modal" onclick="closeReviewModal()">
+            <i data-lucide="x" style="width:18px;height:18px;"></i>
         </button>
-        
-        <h2 style="font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; color:#fff; margin-bottom:0.5rem;">Share Your Experience</h2>
-        <p style="color:rgba(226,232,240,0.6); margin-bottom:2rem; font-size:0.9rem;">Your review will help other traders make the right choice.</p>
 
-        <form id="publicReviewForm" enctype="multipart/form-data" class="space-y-5">
+        <h2 style="font-family:'Rajdhani',sans-serif; font-size:clamp(1.5rem,4vw,2rem); font-weight:700; color:#fff; margin-bottom:0.4rem;">Share Your Experience</h2>
+        <p style="color:rgba(226,232,240,0.6); margin-bottom:1.75rem; font-size:0.88rem;">Your review will help other traders make the right choice.</p>
+
+        <form id="publicReviewForm" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Full Name</label>
-                    <input type="text" name="name" required placeholder="John Doe" 
-                           style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.75rem 1rem; color:#fff; outline:none; font-size:0.9rem;">
+                    <label style="display:block; font-size:0.68rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.4rem;">Full Name</label>
+                    <input type="text" name="name" required placeholder="John Doe"
+                           style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.7rem 1rem; color:#fff; outline:none; font-size:0.88rem;">
                 </div>
                 <div>
-                    <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Role / Title</label>
-                    <input type="text" name="role" placeholder="Professional Trader" 
-                           style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.75rem 1rem; color:#fff; outline:none; font-size:0.9rem;">
+                    <label style="display:block; font-size:0.68rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.4rem;">Role / Title</label>
+                    <input type="text" name="role" placeholder="Professional Trader"
+                           style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.7rem 1rem; color:#fff; outline:none; font-size:0.88rem;">
                 </div>
             </div>
 
             <div>
-                <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Rating</label>
+                <label style="display:block; font-size:0.68rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Rating</label>
                 <div class="flex gap-2" id="starRatingContainer">
                     @for($i=1; $i<=5; $i++)
-                        <i data-lucide="star" class="star-picker cursor-pointer" data-rating="{{ $i }}" 
+                        <i data-lucide="star" class="star-picker cursor-pointer" data-rating="{{ $i }}"
                            style="width:24px; height:24px; color:rgba(255,255,255,0.2); fill:transparent; transition:all 0.2s ease;"></i>
                     @endfor
                 </div>
@@ -786,19 +748,19 @@
             </div>
 
             <div>
-                <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Your Message</label>
-                <textarea name="content" required rows="4" placeholder="How has Copier helped your trading?" 
-                          style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.75rem 1rem; color:#fff; outline:none; font-size:0.9rem; resize:none;"></textarea>
+                <label style="display:block; font-size:0.68rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.4rem;">Your Message</label>
+                <textarea name="content" required rows="4" placeholder="How has Copier helped your trading?"
+                          style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:0.75rem; padding:0.7rem 1rem; color:#fff; outline:none; font-size:0.88rem; resize:none;"></textarea>
             </div>
 
             <div>
-                <label style="display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.5rem;">Avatar (Optional)</label>
-                <input type="file" name="avatar" accept="image/*" 
+                <label style="display:block; font-size:0.68rem; font-weight:600; text-transform:uppercase; color:#00D4FF; letter-spacing:0.1em; margin-bottom:0.4rem;">Avatar (Optional)</label>
+                <input type="file" name="avatar" accept="image/*"
                        style="width:100%; font-size:0.8rem; color:rgba(226,232,240,0.5);">
             </div>
 
-            <button type="submit" class="btn-primary w-full py-4 rounded-xl mt-4" id="submitReviewBtn">
-                <i data-lucide="send" class="w-4 h-4"></i>
+            <button type="submit" class="btn-primary w-full py-4 rounded-xl" id="submitReviewBtn">
+                <i data-lucide="send" style="width:16px;height:16px;"></i>
                 <span>Submit Review</span>
             </button>
         </form>
@@ -808,269 +770,153 @@
 
 @push('scripts')
 <script>
-
-
-
-/* â”€â”€ SCROLL REVEAL + 3D TILT â”€â”€ */
 (function() {
-    /* â”€â”€ INTERSECTION OBSERVER for .reveal â”€â”€ */
-    const revealEls = document.querySelectorAll('.reveal');
+    /* ── SCROLL REVEAL ── */
     const obs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                obs.unobserve(e.target);
-            }
+            if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
         });
-    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
-    revealEls.forEach(el => obs.observe(el));
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    /* â”€â”€ 3D CARD TILT â”€â”€ */
-    document.querySelectorAll('.tilt-3d').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
-            const dx = (e.clientX - cx) / (rect.width / 2);
-            const dy = (e.clientY - cy) / (rect.height / 2);
-            card.style.transform = `perspective(800px) rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg) translateY(-8px)`;
-            card.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
-            card.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
+    /* ── 3D TILT — desktop only ── */
+    if (window.innerWidth >= 768) {
+        document.querySelectorAll('.tilt-3d').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const dx = (e.clientX - r.left - r.width  / 2) / (r.width  / 2);
+                const dy = (e.clientY - r.top  - r.height / 2) / (r.height / 2);
+                card.style.transform = `perspective(800px) rotateX(${-dy*8}deg) rotateY(${dx*8}deg) translateY(-8px)`;
+                card.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100) + '%');
+                card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100) + '%');
+            });
+            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
         });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-        });
-    });
+    }
 
-    /* â”€â”€ FEATURE MODAL LOGIC â”€â”€ */
+    /* ── FEATURE MODAL ── */
     const features = @json($features);
-    const modal = document.getElementById('feature-modal');
+    const modal      = document.getElementById('feature-modal');
     const modalTitle = document.getElementById('modal-title');
-    const modalDesc = document.getElementById('modal-desc');
-    const modalIcon = document.getElementById('modal-icon');
+    const modalDesc  = document.getElementById('modal-desc');
+    const modalIcon  = document.getElementById('modal-icon');
 
     window.showFeatureDetails = function(index) {
         const f = features[index];
         modalTitle.textContent = f.title;
-        modalDesc.innerHTML = f.details; // Using innerHTML in case we add markup later
-
-        // Update icon
+        modalDesc.textContent  = f.details;
         modalIcon.setAttribute('data-lucide', f.icon);
-        if(window.lucide) lucide.createIcons();
-
+        if (window.lucide) lucide.createIcons();
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     };
-
     window.closeFeatureModal = function() {
         modal.classList.remove('active');
         document.body.style.overflow = '';
     };
 
-    /* â”€â”€ REVIEW MODAL LOGIC â”€â”€ */
-    const reviewModal = document.getElementById('review-modal');
-    const reviewContent = document.getElementById('review-content');
+    /* ── REVIEW MODAL ── */
+    const reviewModal    = document.getElementById('review-modal');
+    const reviewContent  = document.getElementById('review-content');
     const reviewBackdrop = document.getElementById('review-backdrop');
-    const publicReviewForm = document.getElementById('publicReviewForm');
-    const starPickers = document.querySelectorAll('.star-picker');
-    const ratingInput = document.getElementById('ratingInput');
+    const reviewForm     = document.getElementById('publicReviewForm');
+    const ratingInput    = document.getElementById('ratingInput');
 
     window.openReviewModal = function() {
         reviewModal.style.display = 'flex';
-        // Force reflow
-        reviewModal.offsetHeight;
-        reviewBackdrop.style.opacity = '1';
-        reviewContent.style.opacity = '1';
+        reviewModal.offsetHeight; // reflow
+        reviewBackdrop.style.opacity  = '1';
+        reviewContent.style.opacity   = '1';
         reviewContent.style.transform = 'translateY(0) scale(1)';
-        document.body.style.overflow = 'hidden';
-        
-        // Reset form
-        publicReviewForm.reset();
+        document.body.style.overflow  = 'hidden';
+        reviewForm.reset();
         setRating(5);
     };
-
     window.closeReviewModal = function() {
-        reviewBackdrop.style.opacity = '0';
-        reviewContent.style.opacity = '0';
+        reviewBackdrop.style.opacity  = '0';
+        reviewContent.style.opacity   = '0';
         reviewContent.style.transform = 'translateY(30px) scale(0.95)';
-        setTimeout(() => {
-            reviewModal.style.display = 'none';
-            document.body.style.overflow = '';
-        }, 400);
+        setTimeout(() => { reviewModal.style.display = 'none'; document.body.style.overflow = ''; }, 400);
     };
 
     function setRating(val) {
         ratingInput.value = val;
-        // Select fresh elements as Lucide might have replaced <i> with <svg>
-        const currentStars = document.querySelectorAll('.star-picker');
-        currentStars.forEach(s => {
+        document.querySelectorAll('.star-picker').forEach(s => {
             const r = parseInt(s.getAttribute('data-rating'));
-            if (r <= val) {
-                s.style.color = '#FBBF24';
-                s.style.fill = '#FBBF24';
-            } else {
-                s.style.color = 'rgba(255,255,255,0.2)';
-                s.style.fill = 'transparent';
-            }
+            s.style.color = r <= val ? '#FBBF24' : 'rgba(255,255,255,0.2)';
+            s.style.fill  = r <= val ? '#FBBF24' : 'transparent';
         });
     }
-
-    // Use event delegation for reliability since Lucide replaces elements
-    const starContainer = document.getElementById('starRatingContainer');
-    starContainer.addEventListener('click', (e) => {
+    document.getElementById('starRatingContainer').addEventListener('click', e => {
         const star = e.target.closest('.star-picker');
-        if (star) {
-            setRating(parseInt(star.getAttribute('data-rating')));
-        }
+        if (star) setRating(parseInt(star.getAttribute('data-rating')));
     });
 
-    publicReviewForm.addEventListener('submit', function(e) {
+    reviewForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = document.getElementById('submitReviewBtn');
-        const btnText = btn.querySelector('span');
-        const originalText = btnText.textContent;
-
-        btn.disabled = true;
-        btnText.textContent = 'Submitting...';
-
-        const formData = new FormData(this);
+        const span = btn.querySelector('span');
+        const orig = span.textContent;
+        btn.disabled = true; span.textContent = 'Submitting...';
 
         fetch("{{ route('reviews.store') }}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
+            method: 'POST', body: new FormData(this),
+            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }
         })
-        .then(res => res.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
-                Swal.fire({
-                    title: 'Thank You!',
-                    text: data.message,
-                    icon: 'success',
-                    background: '#0d1526',
-                    color: '#e2e8f0',
-                    confirmButtonColor: '#00D4FF'
-                });
-                
-                // Dynamically add the review to the grid
+                Swal.fire({ title:'Thank You!', text:data.message, icon:'success', background:'#0d1526', color:'#e2e8f0', confirmButtonColor:'#00D4FF' });
                 const grid = document.getElementById('reviews-grid');
                 if (grid && data.review) {
                     const r = data.review;
-                    const avatarHtml = r.avatar 
-                        ? `<img src="/${r.avatar}" style="width:100%;height:100%;object-fit:cover">`
-                        : r.name[0];
-                    
-                    let starsHtml = '';
-                    for (let s = 0; s < 5; s++) {
-                        const color = s < r.rating ? '#FBBF24' : 'rgba(255,255,255,0.1)';
-                        const fill = s < r.rating ? '#FBBF24' : 'transparent';
-                        starsHtml += `<i data-lucide="star" style="width:13px;height:13px;color:${color};fill:${fill};"></i>`;
+                    const avatarHtml = r.avatar ? `<img src="/${r.avatar}" style="width:100%;height:100%;object-fit:cover">` : r.name[0];
+                    let stars = '';
+                    for (let s=0; s<5; s++) {
+                        const c = s < r.rating ? '#FBBF24' : 'rgba(255,255,255,0.1)';
+                        stars += `<i data-lucide="star" style="width:13px;height:13px;color:${c};fill:${c};"></i>`;
                     }
-
                     const card = document.createElement('div');
                     card.className = 'card reveal visible from-bottom rounded-2xl p-6 tilt-3d';
                     card.innerHTML = `
-                        <div style="font-size:3rem;line-height:1;color:rgba(0,212,255,0.15);font-family:serif;margin-bottom:0.5rem;">"</div>
-                        <div class="flex gap-1 mb-4">${starsHtml}</div>
+                        <div style="font-size:2.5rem;line-height:1;color:rgba(0,212,255,0.15);font-family:serif;margin-bottom:0.4rem;">"</div>
+                        <div class="flex gap-1 mb-4">${stars}</div>
                         <p class="text-sm leading-relaxed mb-5" style="color:rgba(226,232,240,0.75);">${r.content}</p>
                         <div class="flex items-center gap-3" style="border-top:1px solid rgba(0,212,255,0.1);padding-top:1rem;">
-                            <div class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 text-sm font-bold" style="background:linear-gradient(135deg,#1E5FAD,#00D4FF);color:#fff;font-family:'Rajdhani',sans-serif;">
-                                ${avatarHtml}
+                            <div class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 text-sm font-bold" style="background:linear-gradient(135deg,#1E5FAD,#00D4FF);color:#fff;font-family:'Rajdhani',sans-serif;">${avatarHtml}</div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold truncate" style="color:#E2E8F0;">${r.name}</p>
+                                <p class="text-xs truncate" style="color:#00D4FF;opacity:0.7;">${r.role || ''}</p>
                             </div>
-                            <div>
-                                <p class="text-sm font-semibold" style="color:#E2E8F0;">${r.name}</p>
-                                <p class="text-xs" style="color:#00D4FF;opacity:0.7;">${r.role || ''}</p>
-                            </div>
-                        </div>
-                    `;
+                        </div>`;
                     grid.prepend(card);
                     if (window.lucide) lucide.createIcons();
-                    
-                    // Re-initialize tilt for new card
-                    card.addEventListener('mousemove', e => {
-                        const rect = card.getBoundingClientRect();
-                        const cx = rect.left + rect.width / 2;
-                        const cy = rect.top + rect.height / 2;
-                        const dx = (e.clientX - cx) / (rect.width / 2);
-                        const dy = (e.clientY - cy) / (rect.height / 2);
-                        card.style.transform = `perspective(800px) rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg) translateY(-8px)`;
-                    });
-                    card.addEventListener('mouseleave', () => {
-                        card.style.transform = '';
-                    });
+                    if (window.innerWidth >= 768) {
+                        card.addEventListener('mousemove', e => {
+                            const rect = card.getBoundingClientRect();
+                            const dx = (e.clientX - rect.left - rect.width/2)  / (rect.width/2);
+                            const dy = (e.clientY - rect.top  - rect.height/2) / (rect.height/2);
+                            card.style.transform = `perspective(800px) rotateX(${-dy*8}deg) rotateY(${dx*8}deg) translateY(-8px)`;
+                        });
+                        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+                    }
                 }
-
                 closeReviewModal();
             } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: data.message || 'Something went wrong.',
-                    icon: 'error',
-                    background: '#0d1526',
-                    color: '#e2e8f0',
-                    confirmButtonColor: '#ef4444'
-                });
+                Swal.fire({ title:'Error', text:data.message || 'Something went wrong.', icon:'error', background:'#0d1526', color:'#e2e8f0', confirmButtonColor:'#ef4444' });
             }
         })
-        .catch(err => {
-            console.error(err);
-            Swal.fire({
-                title: 'Error',
-                text: 'Could not submit review. Please try again.',
-                icon: 'error',
-                background: '#0d1526',
-                color: '#e2e8f0'
-            });
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btnText.textContent = originalText;
-        });
+        .catch(() => { Swal.fire({ title:'Error', text:'Could not submit review.', icon:'error', background:'#0d1526', color:'#e2e8f0' }); })
+        .finally(() => { btn.disabled = false; span.textContent = orig; });
     });
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
+    /* ── ESC KEY ── */
+    document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             if (modal.classList.contains('active')) closeFeatureModal();
             if (reviewModal.style.display === 'flex') closeReviewModal();
         }
     });
-
-    /* â”€â”€ FAQ ACCORDION â”€â”€ */
-    window.toggleFaq = function(btn) {
-        const item   = btn.closest('.faq-item');
-        const answer = item.querySelector('.faq-answer');
-        const icon   = item.querySelector('.faq-icon');
-        const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
-
-        // Close all others
-        document.querySelectorAll('.faq-item').forEach(other => {
-            if (other !== item) {
-                other.querySelector('.faq-answer').style.maxHeight = '0px';
-                const oi = other.querySelector('.faq-icon');
-                oi.setAttribute('data-lucide','plus');
-                oi.style.transform = '';
-                if(window.lucide) lucide.createIcons({ nodes: [oi] });
-            }
-        });
-
-        if (isOpen) {
-            answer.style.maxHeight = '0px';
-            icon.setAttribute('data-lucide','plus');
-            icon.style.transform = '';
-        } else {
-            answer.style.maxHeight = answer.scrollHeight + 'px';
-            icon.setAttribute('data-lucide','minus');
-            icon.style.transform = 'rotate(180deg)';
-        }
-        if(window.lucide) lucide.createIcons({ nodes: [icon] });
-    };
-
 })();
 </script>
 @endpush
-
-
-
