@@ -32,11 +32,13 @@ class AccountController extends Controller
         }
 
         $request->validate([
+            'trading_id' => 'required|string',
             'server' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $customer->masterAccount()->create([
+            'trading_id' => $request->input('trading_id'),
             'server' => $request->input('server'),
             'password' => $request->password, // In a real app, this should be encrypted if needed or handled securely
         ]);
@@ -54,11 +56,13 @@ class AccountController extends Controller
         }
 
         $request->validate([
+            'trading_id' => 'required|string',
             'server' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $master->update([
+            'trading_id' => $request->input('trading_id'),
             'server' => $request->input('server'),
             'password' => $request->password,
         ]);
@@ -84,11 +88,13 @@ class AccountController extends Controller
         }
 
         $request->validate([
+            'trading_id' => 'required|string',
             'server' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $master->slaveAccounts()->create([
+            'trading_id' => $request->input('trading_id'),
             'server' => $request->input('server'),
             'password' => $request->password,
         ]);
@@ -106,11 +112,13 @@ class AccountController extends Controller
         }
 
         $request->validate([
+            'trading_id' => 'required|string',
             'server' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $slave->update([
+            'trading_id' => $request->input('trading_id'),
             'server' => $request->input('server'),
             'password' => $request->password,
         ]);

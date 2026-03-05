@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SlaveAccount extends Model
 {
-    protected $fillable = ['master_account_id', 'server', 'password'];
+    protected $fillable = ['master_account_id', 'trading_id', 'server', 'password'];
 
     protected $hidden = ['password'];
 

@@ -175,7 +175,8 @@
                                     <table class="w-full text-left text-sm">
                                         <thead class="bg-gray-900/50 text-gray-400 uppercase text-[10px] tracking-widest">
                                             <tr>
-                                                <th class="px-6 py-4">ID</th>
+                                                <th class="px-6 py-4">Status ID</th>
+                                                <th class="px-6 py-4">Trading ID</th>
                                                 <th class="px-6 py-4">Server</th>
                                                 <th class="px-6 py-4">Password</th>
                                                 <th class="px-6 py-4 text-right">Action</th>
@@ -184,10 +185,11 @@
                                         <tbody class="divide-y divide-gray-800">
                                             <tr>
                                                 <td class="px-6 py-4 font-mono text-gray-500">MSTR-{{ str_pad($masterAccount->id, 4, '0', STR_PAD_LEFT) }}</td>
+                                                <td class="px-6 py-4 text-white font-semibold">{{ $masterAccount->trading_id ?? 'N/A' }}</td>
                                                 <td class="px-6 py-4 text-white">{{ $masterAccount->server }}</td>
                                                 <td class="px-6 py-4 text-gray-400 font-mono">{{ str_repeat('.', strlen($masterAccount->password)) }}</td>
                                                 <td class="px-6 py-4 text-right">
-                                                    <button onclick="editMaster('{{ $masterAccount->server }}')" class="text-xs font-bold text-[#00D4FF] hover:underline uppercase tracking-widest">Edit</button>
+                                                    <button onclick="editMaster('{{ $masterAccount->trading_id }}', '{{ $masterAccount->server }}')" class="text-xs font-bold text-[#00D4FF] hover:underline uppercase tracking-widest">Edit</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -219,7 +221,8 @@
                                     <table class="w-full text-left text-sm">
                                         <thead class="bg-gray-900/50 text-gray-400 uppercase text-[10px] tracking-widest">
                                             <tr>
-                                                <th class="px-6 py-4">ID</th>
+                                                <th class="px-6 py-4">Status ID</th>
+                                                <th class="px-6 py-4">Trading ID</th>
                                                 <th class="px-6 py-4">Server</th>
                                                 <th class="px-6 py-4">Password</th>
                                                 <th class="px-6 py-4 text-right">Action</th>
@@ -229,16 +232,17 @@
                                             @foreach($masterAccount->slaveAccounts as $slave)
                                             <tr>
                                                 <td class="px-6 py-4 font-mono text-gray-500">SLV-{{ str_pad($slave->id, 4, '0', STR_PAD_LEFT) }}</td>
+                                                <td class="px-6 py-4 text-white font-semibold">{{ $slave->trading_id ?? 'N/A' }}</td>
                                                 <td class="px-6 py-4 text-white">{{ $slave->server }}</td>
                                                 <td class="px-6 py-4 text-gray-400 font-mono">{{ str_repeat('.', strlen($slave->password)) }}</td>
                                                 <td class="px-6 py-4 text-right">
-                                                    <button onclick="editSlave({{ $slave->id }}, '{{ $slave->server }}')" class="text-xs font-bold text-[#00D4FF] hover:underline uppercase tracking-widest">Edit</button>
+                                                    <button onclick="editSlave({{ $slave->id }}, '{{ $slave->trading_id }}', '{{ $slave->server }}')" class="text-xs font-bold text-[#00D4FF] hover:underline uppercase tracking-widest">Edit</button>
                                                 </td>
                                             </tr>
                                             @endforeach
                                             @if($masterAccount->slaveAccounts->isEmpty())
                                             <tr>
-                                                <td colspan="4" class="px-6 py-12 text-center text-gray-500 italic">
+                                                <td colspan="5" class="px-6 py-12 text-center text-gray-500 italic">
                                                     No slave accounts added yet.
                                                 </td>
                                             </tr>
@@ -319,6 +323,10 @@
             @csrf
             <div class="space-y-4">
                 <div>
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2 font-bold">Trading ID</label>
+                    <input type="text" name="trading_id" id="master-trading-id" required placeholder="Enter your Trading ID" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00D4FF] transition-colors">
+                </div>
+                <div>
                     <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2 font-bold">Trading Server</label>
                     <input type="text" name="server" id="master-server" required placeholder="........" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00D4FF] transition-colors">
                 </div>
@@ -341,6 +349,10 @@
         <form id="slave-form" action="{{ route('accounts.slave.store') }}" method="POST">
             @csrf
             <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2 font-bold">Trading ID</label>
+                    <input type="text" name="trading_id" id="slave-trading-id" required placeholder="Enter your Trading ID" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00D4FF] transition-colors">
+                </div>
                 <div>
                     <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2 font-bold">Trading Server</label>
                     <input type="text" name="server" id="slave-server" required placeholder="........" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00D4FF] transition-colors">
@@ -399,17 +411,19 @@
         document.body.style.overflow = '';
     }
 
-    function editMaster(server) {
+    function editMaster(tradingId, server) {
         document.getElementById('master-modal-title').innerText = 'Edit Master Account';
         document.getElementById('master-form').action = "{{ route('accounts.master.update') }}";
+        document.getElementById('master-trading-id').value = tradingId;
         document.getElementById('master-server').value = server;
         openModal('master-modal');
     }
 
-    function editSlave(id, server) {
+    function editSlave(id, tradingId, server) {
         document.getElementById('slave-modal-title').innerText = 'Edit Slave Account';
         let url = "{{ route('accounts.slave.update', ':id') }}";
         document.getElementById('slave-form').action = url.replace(':id', id);
+        document.getElementById('slave-trading-id').value = tradingId;
         document.getElementById('slave-server').value = server;
         openModal('slave-modal');
     }
