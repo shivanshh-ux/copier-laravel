@@ -25,6 +25,7 @@ Route::get('/', function () {
 Route::get('/about', function () { return view('customer.about'); })->name('about');
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/help', function () { return view('customer.help'); })->name('help');
+Route::post('/help/send', [\App\Http\Controllers\Customer\HelpMessageController::class, 'store'])->name('help.send');
 Route::post('/reviews', [\App\Http\Controllers\Customer\PublicReviewController::class, 'store'])->name('reviews.store');
 
 // Guest routes
@@ -67,6 +68,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('admin.auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/', fn() => redirect()->route('admin.dashboard'));
+
+        // Help Messages
+        Route::resource('help-messages', \App\Http\Controllers\Admin\HelpMessageController::class)
+            ->only(['index', 'show', 'destroy']);
+        Route::patch('help-messages/{help_message}/status', [\App\Http\Controllers\Admin\HelpMessageController::class, 'updateStatus'])->name('help-messages.updateStatus');
 
         // Customers (no create/store — customers register on frontend)
         Route::post('customers/bulk-delete', [CustomerController::class, 'bulkDelete'])->name('customers.bulk-delete');

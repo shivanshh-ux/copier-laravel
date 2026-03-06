@@ -368,6 +368,11 @@
             <span class="nav-icon"><i class="fas fa-comment-dots"></i></span>
             Reviews
         </a>
+
+        <a href="{{ route('admin.help-messages.index') }}" class="nav-item nav-link {{ request()->routeIs('admin.help-messages.*') ? 'active' : '' }}">
+            <span class="nav-icon"><i class="fas fa-envelope-open-text"></i></span>
+            Customer's Message
+        </a>
     </nav>
 
     <div class="sidebar-footer">

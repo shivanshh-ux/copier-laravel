@@ -159,31 +159,48 @@ $faqs = [
                 <h2 style="font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff">Send a Message</h2>
             </div>
             <div class="p-8 rounded-2xl" style="background: rgba(15,30,53,0.7); border: 1px solid rgba(0,212,255,0.12)" data-aos="fade-up" data-aos-delay="100">
-                <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Message sent! (Demo only)');">
+                @if(session('success'))
+                    <div class="mb-6 p-4 rounded-xl text-sm" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #10B981">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="mb-6 p-4 rounded-xl text-sm" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #EF4444">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('help.send') }}" method="POST">
+                    @csrf
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                         <div>
                             <label class="block text-xs mb-2 opacity-60" style="color: #E2E8F0">Full Name</label>
-                            <input type="text" placeholder="Full Name" required class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Full Name" required class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">
                         </div>
                         <div>
                             <label class="block text-xs mb-2 opacity-60" style="color: #E2E8F0">Email Address</label>
-                            <input type="email" placeholder="Email Address" required class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email Address" required class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">
                         </div>
                     </div>
                     <div class="mb-5">
                         <label class="block text-xs mb-2 opacity-60" style="color: #E2E8F0">Subject</label>
-                        <select class="w-full px-4 py-3 rounded-xl text-sm outline-none" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">
-                            <option>General Inquiry</option>
-                            <option>Technical Support</option>
-                            <option>Billing & Subscriptions</option>
-                            <option>MetaTrader Setup</option>
-                            <option>Strategy Questions</option>
-                            <option>Partnership</option>
+                        <select name="subject" class="w-full px-4 py-3 rounded-xl text-sm outline-none" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">
+                            <option value="General Inquiry" {{ old('subject') == 'General Inquiry' ? 'selected' : '' }} class="bg-black">General Inquiry</option>
+                            <option value="Technical Support" {{ old('subject') == 'Technical Support' ? 'selected' : '' }} class="bg-black">Technical Support</option>
+                            <option value="Billing & Subscriptions" {{ old('subject') == 'Billing & Subscriptions' ? 'selected' : '' }} class="bg-black">Billing & Subscriptions</option>
+                            <option value="MetaTrader Setup" {{ old('subject') == 'MetaTrader Setup' ? 'selected' : '' }} class="bg-black">MetaTrader Setup</option>
+                            <option value="Strategy Questions" {{ old('subject') == 'Strategy Questions' ? 'selected' : '' }} class="bg-black">Strategy Questions</option>
+                            <option value="Partnership" {{ old('subject') == 'Partnership' ? 'selected' : '' }} class="bg-black">Partnership</option>
                         </select>
                     </div>
                     <div class="mb-6">
                         <label class="block text-xs mb-2 opacity-60" style="color: #E2E8F0">Message</label>
-                        <textarea rows="4" placeholder="Describe your question or issue..." required class="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0"></textarea>
+                        <textarea name="message" rows="4" placeholder="Describe your question or issue..." required class="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.12); color: #E2E8F0">{{ old('message') }}</textarea>
                     </div>
                     <button type="submit" class="w-full py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg" style="background: linear-gradient(135deg, #1E5FAD, #00D4FF); color: #fff; font-weight: 700">
                         Send Message
