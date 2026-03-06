@@ -361,7 +361,7 @@
         <div class="hero-ctas anim-fade-up-4 flex flex-wrap gap-3 justify-center">
             <a href="{{ route('signup') }}" class="btn-primary pulse-glow">
                 <i data-lucide="zap" style="width:16px;height:16px;"></i>
-                <span>Get Started Free</span>
+                <span>Get Started</span>
             </a>
             <a href="{{ route('services') }}" class="btn-outline">
                 <i data-lucide="play-circle" style="width:16px;height:16px;"></i>
