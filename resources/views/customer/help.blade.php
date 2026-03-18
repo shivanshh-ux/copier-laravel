@@ -131,8 +131,8 @@ $faqs = [
                 @php
                 $contacts = [
                     ['icon' => 'message-circle', 'title' => 'Live Chat', 'desc' => 'Chat with our support team in real time.', 'badge' => 'Online Now', 'color' => '#10B981'],
-                    ['icon' => 'mail', 'title' => 'Email Support', 'desc' => 'support@copier.trade — reply within 2 hours.', 'badge' => '< 2h Reply', 'color' => '#00D4FF'],
-                    ['icon' => 'phone', 'title' => 'Phone Support', 'desc' => '+1 (800) COPIER-1 — available 9am–9pm EST.', 'badge' => 'Mon–Fri', 'color' => '#1E5FAD'],
+                    ['icon' => 'mail', 'title' => 'Email Support', 'desc' => 'emperorsmartsolution@gmail.com — reply within 2 hours.', 'badge' => '< 2h Reply', 'color' => '#00D4FF'],
+                    ['icon' => 'phone', 'title' => 'Phone Support', 'desc' => '+91 9638581248 — available 9am–9pm EST.', 'badge' => 'Mon–Fri', 'color' => '#1E5FAD'],
                     ['icon' => 'book-open', 'title' => 'Documentation', 'desc' => 'Detailed technical docs and API reference.', 'badge' => 'Always Open', 'color' => '#F59E0B'],
                 ];
                 @endphp
